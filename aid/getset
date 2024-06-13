@@ -1,0 +1,49 @@
+#ifndef PMergeMe_HPP
+#define PMergeMe_HPP
+
+class PMergeMe
+{
+    public :
+        PMergeMe(void);
+        PMergeMe(const PMergeMe &cop);
+        PMergeMe &operator=(const PMergeMe &eg);
+        virtual ~PMergeMe(void);
+    private :
+
+};
+
+#endif
+
+#include "PMergeMe.hpp"
+
+PMergeMe::PMergeMe(void)
+{
+    return;
+}
+PMergeMe::PMergeMe(const PMergeMe &cop)
+{
+    *this = cop;
+}
+PMergeMe &PMergeMe::operator=(const PMergeMe &eg)
+{
+    if (this != &eg)
+    {
+
+    }
+    return (*this);
+}
+PMergeMe::~PMergeMe(void)
+{
+    return;
+}
+
+std::string PMergeMe::getTarget(void) const
+{
+    return (this->_target);
+}
+
+void PMergeMe::settarget(std::string str)
+{
+    this->_target = str;
+}
+
