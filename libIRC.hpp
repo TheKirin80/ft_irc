@@ -15,7 +15,9 @@
 #include <iostream>
 #include <vector>
 #include <cctype>
-#include <stdio.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
 
 #include "Client.hpp"
 #include "Channel.hpp"

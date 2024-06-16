@@ -1,6 +1,6 @@
 #include "libIRC.hpp"
 
-Channel::Channel(std::string name) : _name(name), _passwrd(""), _topic(""), _limit_client(0)
+Channel::Channel(std::string name) : _name(name), _passwrd(""), _topic(""), _limit_client(0), _restricted_topic(false)
 {
     return;
 }
@@ -55,7 +55,22 @@ void Channel::setLimitClient(int i)
 {
     this->_limit_client = i;
 }
+//_restricted_topic
+bool Channel::getRestrictedTopicState(void) const
+{
+    return (this->_restricted_topic);
+}
 
+void Channel::setRestrictedTopicTrue(void)
+{
+    this->_restricted_topic = true;
+}
+void Channel::setRestrictedTopicFalse(void)
+{
+    this->_restricted_topic = false;
+}
+
+//Utilitaires
 int Channel::in_list_client(std::string client)
 {
     for(std::vector<Client>::iterator it = this->_list_client.begin(); it != this->_list_client.end();it++)
@@ -105,4 +120,9 @@ void    Channel::rm_client(Client &client)
         }
 	}
 }
-
+int	Channel::isChannelEmpty(void)
+{
+	if (this->_list_client.empty())
+		return OK;
+	return ERROR;
+}

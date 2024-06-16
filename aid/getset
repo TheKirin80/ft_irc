@@ -56,17 +56,17 @@ void Server::setpasswrd_serv(int i)
 {
     this->_passwrd_serv = i;
 }
-bool Server::getpass_CheckState(void) const
+bool Server::getrestrict_topicState(void) const
 {
-    return (this->_pass_check);
+    return (this->_restrict_topic);
 }
 
-void Server::setpass_CheckTrue(void)
+void Server::setrestrict_topicTrue(void)
 {
-    this->_pass_check = true;
+    this->_restrict_topic = true;
 }
-void Server::setpass_CheckFalse(void)
+void Server::setrestrict_topicFalse(void)
 {
-    this->_pass_check = false;
+    this->_restrict_topic = false;
 }
 

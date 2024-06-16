@@ -361,9 +361,9 @@ parametres: ( <channel> *( "," <channel> ) [ <key> *( "," <key> ) ] ) / "0"
 La commande join est utilisee pour creer un nouveau chan s il n a pas encore ete cree sinon juste le rejoindre.
 Si on le cree on devient chanop (channel operator) de ce channel.
 
-// L argument special "0" fait en sorte que le user quitte tous les channel ou il est actuellement membre.
-// Cet argument special n existe pas sur irssi puisque "/join 0" se transforme en "JOIN #0" donc on rejoint un channel qui sappelle 0 au lieu de suppr
-// En revanche on peut l implementer pour ncat
+//? L argument special "0" fait en sorte que le user quitte tous les channel ou il est actuellement membre.
+//? Cet argument special n existe pas sur irssi puisque "/join 0" se transforme en "JOIN #0" donc on rejoint un channel qui sappelle 0 au lieu de suppr
+//? En revanche on peut l implementer pour ncat
 
 L argument <key> est un mot de passe pour restreindre l acces a un channel.
 On peut set une <key> avec MODE +k ou en creant le channel avec JOIN.
