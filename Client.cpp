@@ -162,4 +162,19 @@ int	Client::in_channel(std::string chanel)
 	return ERROR;
 }
 
+int Client::countChannel(void)
+{
+    int count = 0;
+
+    if (this->_list_channel.empty())
+        return (count);
+    std::vector<Channel>::iterator it = this->_list_channel.begin();
+    for (; it != this->_list_channel.end(); it++)
+    {
+        count++;
+    }
+    return (count);
+
+}
+
 

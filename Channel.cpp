@@ -1,6 +1,6 @@
 #include "libIRC.hpp"
 
-Channel::Channel(std::string name) : _name(name), _passwrd(""), _topic(""), _limit_client(0), _restricted_topic(false)
+Channel::Channel(std::string name) : _name(name), _passwrd(""), _topic(""), _limit_client(0), _restricted_topic(false), _only_invite(false)
 {
     return;
 }
@@ -68,6 +68,21 @@ void Channel::setRestrictedTopicTrue(void)
 void Channel::setRestrictedTopicFalse(void)
 {
     this->_restricted_topic = false;
+}
+
+//_only_invite
+bool Channel::getOnlyInviteState(void) const
+{
+    return (this->_only_invite);
+}
+
+void Channel::setOnlyInviteTrue(void)
+{
+    this->_only_invite = true;
+}
+void Channel::setOnlyInviteFalse(void)
+{
+    this->_only_invite = false;
 }
 
 //Utilitaires

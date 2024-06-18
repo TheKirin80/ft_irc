@@ -21,7 +21,10 @@ class Channel
         void        setLimitClient(int i);
         bool        getRestrictedTopicState(void) const;
         void        setRestrictedTopicTrue(void);
-        void        setRestrictedTopicFalse(void);   
+        void        setRestrictedTopicFalse(void);
+        bool        getOnlyInviteState(void) const;
+        void        setOnlyInviteTrue(void);
+        void        setOnlyInviteFalse(void);
         //utilitaire
         int         in_list_client(std::string client);
         int         in_list_op_client(std::string client);
@@ -39,6 +42,7 @@ class Channel
         std::string         _topic;
         int                 _limit_client;
         bool                _restricted_topic;
+        bool                _only_invite;
 
 };
 

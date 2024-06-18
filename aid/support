@@ -465,3 +465,7 @@ peut etre ecrit comme suit
 #define ERR_NEEDMOREPARAMS(server_name, command)	":" + server_name + " 461 " + command + " :Not enough parameters\r\n"
 dans ce cas la, command et server_name sont des variables donc on les appelle comme on veut et on leurs donne la valeur qu on veut
 bon la variable server_name n est pas vraiment une variable on a un seul server donc le nom changera pas on peut le mettre en brut direct... 
+
+
+
+send(param.get_fd()), to_send, taille, 0);

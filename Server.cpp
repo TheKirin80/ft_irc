@@ -65,7 +65,18 @@ static int special_char(char c){
 }
 
 //utilitaire
-
+void	Server::add_channel_serv(int fd, std::string name)
+{
+	//Creation du nouveau channel
+	Channel new_channel = Channel(name);
+	this->_list_channel_serv.push_back(new_channel);
+	//Ajout du client au liste classique et op ainsi qu'ajout du channel sur le client 
+	Client  client = this->getClientWithFd(fd);
+	Channel channel = this->getChannelWithName(name); // Passe la reference du channel dans le vector channel du serv
+	channel.add_client(client);
+	channel.add_op_client();
+	client.add_chan(channel);
+}
 void	Server::rm_channel_serv(std::string channel)
 {
 	std::vector<Channel>::iterator it = this->_list_channel_serv.begin();
@@ -73,7 +84,7 @@ void	Server::rm_channel_serv(std::string channel)
 	{
 		if (channel == (*it).getName())
 		{
-			_list_channel_serv.erase(it);
+			this->_list_channel_serv.erase(it);
 			return;
 		}
 	}
@@ -85,7 +96,7 @@ void	Server::rm_client_serv(std::string client)
 	{
 		if (client == (*it).getNickname())
 		{
-			_list_client_serv.erase(it);
+			this->_list_client_serv.erase(it);
 			return ;
 		}
 	}
@@ -93,9 +104,8 @@ void	Server::rm_client_serv(std::string client)
 
 int	Server::checkNickname(std::string param)
 {
-	// std::cout << param.get_params() << std::endl;
 	if (param.size() > 9)
-    {
+    {	
 		return (ERROR);
 	}
 	if (special_char(param.at(0)) == MATCH && isalpha(param.at(0)) == NO_MATCH)
@@ -157,12 +167,41 @@ std::vector<std::string> Server::once_split(std::string param, std::string lim) 
 	return (ret);
 }
 
-int	Server::inListChannelServ(const std::string name_chan)
+int	Server::inListChannelServ(std::string name_chan)
 {
 	std::vector<Channel>::iterator it = this->_list_channel_serv.begin();
 
 	for (; it != this->_list_channel_serv.end(); it++){
 		if (name_chan == (*it).getName())
+			return (OK);
+	}
+	return (ERROR);
+}
+int	Server::checkChannelName(std::string name) 
+{
+	std::string to_send;
+	
+	if ((name[0] != '&' && name[0] != '#' && name[0] != '+' && name[0] != '!') || name.size() > 50 )
+	{
+		//message error
+		return (ERROR);
+	}
+	for (size_t i = 1; name[i]; i++){
+		if (name[i] == ' ' || name[i] == ',' || name[i] == 7)
+		{
+			//message error
+			return (ERROR);
+		}
+	}	
+	return (OK);
+}
+
+int	Server::inListClientServ(std::string name_client)
+{
+	std::vector<Client>::iterator it = this->_list_client_serv.begin();
+
+	for (; it != this->_list_client_serv.end(); it++){
+		if (name_client == (*it).getNickname())
 			return (OK);
 	}
 	return (ERROR);

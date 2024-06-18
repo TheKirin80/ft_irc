@@ -56,17 +56,17 @@ void Server::setpasswrd_serv(int i)
 {
     this->_passwrd_serv = i;
 }
-bool Server::getrestrict_topicState(void) const
+bool Server::getonly_inviteState(void) const
 {
-    return (this->_restrict_topic);
+    return (this->_only_invite);
 }
 
-void Server::setrestrict_topicTrue(void)
+void Server::setonly_inviteTrue(void)
 {
-    this->_restrict_topic = true;
+    this->_only_invite = true;
 }
-void Server::setrestrict_topicFalse(void)
+void Server::setonly_inviteFalse(void)
 {
-    this->_restrict_topic = false;
+    this->_only_invite = false;
 }
 

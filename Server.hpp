@@ -16,13 +16,16 @@ class Server
         Client      &getClientWithFd(int fd);
         Channel     &getChannelWithName(std::string channel);
         //utilitaire
+        void	                 add_channel_serv(int fd, std::string name);
         void                     rm_channel_serv(std::string channel);
-        void                     rm_client_serv(std::string client);
-        int	                     checkNickname(std::string param);
+        void                     rm_client_serv(std::string client);    
+        int	                     checkNickname(std::string param); 
         int                      checkDoublon(int fd, std::string param);
         std::vector<std::string> multi_split(std::string param, std::string lim);
         std::vector<std::string> once_split(std::string param, std::string lim);
-        int	                     inListChannelServ(const std::string name_chan);
+        int	                     inListChannelServ(std::string name_chan);
+        int	                     checkChannelName(std::string name); 
+        int	                     inListClientServ(std::string name_client);
         //COMMAND
         void	PASS(int fd, std::string param);
         void    NICK(int fd, std::string param);
@@ -31,8 +34,9 @@ class Server
         void	PART(int fd, std::string param);
         void    CAP(void);
         void	TOPIC(int fd, std::string param);
-        void	JOIN(int fd, std::string param); 
-
+        void	JOIN(int fd, std::string param);
+        void	INVITE(int fd, std::string param);
+        void    KICK(int fd, std::string param);
     private :
         std::string			    _name;
 		int						_port;

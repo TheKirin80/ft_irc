@@ -37,6 +37,7 @@ class Client
         void        rm_all_channel(void);
         std::string	list_channel(void);
         int	        in_channel(std::string chanel);
+        int         countChannel(void);
 
     private :
         std::string _username;
