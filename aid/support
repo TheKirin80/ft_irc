@@ -466,6 +466,6 @@ peut etre ecrit comme suit
 dans ce cas la, command et server_name sont des variables donc on les appelle comme on veut et on leurs donne la valeur qu on veut
 bon la variable server_name n est pas vraiment une variable on a un seul server donc le nom changera pas on peut le mettre en brut direct... 
 
-
-
+https://www.tech-invite.com/y25/tinv-ietf-rfc-2812.html#e-3-2-1
+https://www.rfc-editor.org/rfc/rfc2812#section-1.2
 send(param.get_fd()), to_send, taille, 0);

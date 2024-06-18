@@ -37,6 +37,9 @@ class Server
         void	JOIN(int fd, std::string param);
         void	INVITE(int fd, std::string param);
         void    KICK(int fd, std::string param);
+        void	MODE(int fd, std::string param);
+        void	PRIVMSG(int fd, std::string param);
+        void	NOTICE(int fd, std::string param);
     private :
         std::string			    _name;
 		int						_port;

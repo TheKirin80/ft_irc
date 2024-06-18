@@ -33,6 +33,7 @@ class Channel
         void	    rm_perm(Client &client);
         void        rm_client(Client &client);
         int	        isChannelEmpty(void);
+        void        rm_passwrd(void);
 
     private :
         std::string         _name;

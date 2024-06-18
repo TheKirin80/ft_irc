@@ -141,3 +141,8 @@ int	Channel::isChannelEmpty(void)
 		return OK;
 	return ERROR;
 }
+
+void Channel::rm_passwrd(void)
+{
+	this->_passwrd.clear();
+}
