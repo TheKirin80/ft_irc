@@ -26,6 +26,13 @@ class Server
         int	                     inListChannelServ(std::string name_chan);
         int	                     checkChannelName(std::string name); 
         int	                     inListClientServ(std::string name_client);
+        //Initialisation du server et mainloop
+        void                     signalHandler(int sig);
+        void                     init_server(void);
+        void                     accept_new_client(void);
+        void                     receive_new_data(int fd);
+        void                     loop_server(int port, std::string passwrd);
+
         //COMMAND
         void	PASS(int fd, std::string param);
         void    NICK(int fd, std::string param);
@@ -39,13 +46,14 @@ class Server
         void    KICK(int fd, std::string param);
         void	MODE(int fd, std::string param);
         void	PRIVMSG(int fd, std::string param);
-        void	NOTICE(int fd, std::string param);
     private :
         std::string			    _name;
 		int						_port;
 		std::string				_passwrd_serv;
 		std::vector<Client>		_list_client_serv;
 		std::vector<Channel>	_list_channel_serv;
+        std::vector<struct pollfd> _list_fd;
+        int                     _serv_fd;
         
 };
 

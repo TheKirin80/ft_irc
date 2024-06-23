@@ -26,6 +26,6 @@ int main(int ac, char **av)
         return (1);
     }
     //BOUCLE DE LANCEMENT DES SOCKETS
-
+    
     return (0);
 }
