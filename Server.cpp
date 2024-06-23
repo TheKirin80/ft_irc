@@ -206,3 +206,28 @@ int	Server::inListClientServ(std::string name_client)
 	}
 	return (ERROR);
 }
+
+void Server::rm_fd(int fd)
+{
+	std::vector<struct pollfd>::iterator ut = this->_list_fd.begin();
+	for (;it != _list_fd.end(), it++)
+	{
+		if ((*it).fd == fd)
+		{
+			this->_list_fd.erase(it);
+			return;
+		}
+	}
+}
+
+void	Server::close_fd()
+{
+	for(size_t i = 0; i < clients.size(); i++){
+		std::cout << RED << "Client <" << clients[i].GetFd() << "> Disconnected" << WHI << std::endl;
+		close(clients[i].GetFd());
+	}
+	if (server_fdsocket != -1){	
+		std::cout << RED << "Server <" << server_fdsocket << "> Disconnected" << WHI << std::endl;
+		close(server_fdsocket);
+	}
+}

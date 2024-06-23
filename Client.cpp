@@ -1,7 +1,8 @@
 #include "libIRC.hpp"
 
-Client::Client(int fd) : _fd(fd), _pass_check(false), _nick_check(false), _user_check(false)
+Client::Client(int fd) : _fd(fd), _pass_check(false), _nick_check(false), _user_check(false), 
 {
+    this->_buff = "";
     return;
 }
 

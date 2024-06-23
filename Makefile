@@ -1,4 +1,19 @@
 SRCS =	main.cpp\
+		Client.cpp\
+		Channel.cpp\
+		Server.cpp\
+		/COMMAND/CAP.cpp\
+		/COMMAND/INVITE.cpp\
+		/COMMAND/JOIN.cpp\
+		/COMMAND/KICK.cpp\
+		/COMMAND/MODE.cpp\
+		/COMMAND/NICK.cpp\
+		/COMMAND/PART.cpp\
+		/COMMAND/PASS.cpp\
+		/COMMAND/PRIVMSG.cpp\
+		/COMMAND/QUIT.cpp\
+		/COMMAND/TOPIC.cpp\
+		/COMMAND/USER.cpp\
 
 INC		= -I includes -I /usr/include
 

@@ -10,6 +10,7 @@ class Client
     public :
         Client(int fd);
         ~Client(void);
+        std::string _buff;
         //getset
         std::string getUsername(void) const;
         void        setUsername(std::string str);
