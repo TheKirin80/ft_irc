@@ -1,4 +1,4 @@
-#include "libIRC.hpp"
+#include "../libIRC.hpp"
 
 void	Server::PRIVMSG(int fd, std::string param)
 {
@@ -21,11 +21,11 @@ void	Server::PRIVMSG(int fd, std::string param)
 		//ERR_NOTEXTTOSEND
 		return ;
 	}
-	if (this->inListClientServ(list_param.at(0)) == EXIT_SUCCESS)
+	if (this->inListClientServ(list_param.at(0)) == OK)
     {
 		//Message au client 
 	}
-	else if (this->inListChannelServ(list_param.at(0) == EXIT_SUCCESS)
+	else if (this->inListChannelServ(list_param.at(0)) == OK)
     {
         //message a tout les personnes du channel   
 	}

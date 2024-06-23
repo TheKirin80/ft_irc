@@ -1,4 +1,4 @@
-#include "libIRC.hpp"
+#include "../libIRC.hpp"
 
 static std::string	getChannels(std::string param_channel){
 	std::string	channels;
@@ -18,10 +18,10 @@ static std::string	getUsers(std::string param_user){
 	std::string	users;
 	int			count = 0;
 	size_t		begin = 0;
-	size_t		end = param_users.size();
+	size_t		end = param_user.size();
 
-	for (size_t i = 0; param_users[i]; i++){
-		if (param_users[i] == ' ')
+	for (size_t i = 0; param_user[i]; i++){
+		if (param_user[i] == ' ')
 			count++;
 		if (count == 1){
 			begin = i + 1;
@@ -33,7 +33,7 @@ static std::string	getUsers(std::string param_user){
 		}
 	}
 	for (size_t i = begin; i < end; i++){
-		users += param_users[i];
+		users += param_user[i];
 	}
 	return users;
 }

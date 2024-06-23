@@ -30,9 +30,9 @@ class Server
         void                     signalHandler(int sig);
         void                     init_server(void);
         void                     accept_new_client(void);
-        void                     exec_command(int fd, std::string param)
+        void                     exec_command(int fd, std::string param);
         void                     receive_new_data(int fd);
-        void                     loop_server(int port, std::string passwrd);
+        void                     loop_server();
         void                     rm_fd(int fd);
 
         //COMMAND

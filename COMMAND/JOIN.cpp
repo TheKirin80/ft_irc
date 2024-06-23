@@ -1,4 +1,4 @@
-#include "libIRC.hpp"
+#include "../libIRC.hpp"
 
 static std::string	getChannelParam(std::string param){
 	std::string	channels;
@@ -84,17 +84,17 @@ void	Server::JOIN(int fd, std::string param)
     itchannel = list_channels.begin();
 	for (; itchannel != list_channels.end(); itchannel++)
     {
-        Channel chanel = get_channel_by_name(*itchannel);
+        Channel chanel = this->getChannelWithName(*itchannel);
 		if (inListChannelServ(*itchannel) == OK){ // Cas ou le channel est existant
 			if (chanel.in_list_client(client.getNickname()) == OK)
 				continue ;
-			if (chanel.getOnlyInviteState == true)
+			if (chanel.getOnlyInviteState() == true)
             {
 				//Message erreur invite only
 				return ;
 			}
 			if (chanel.getLimitClient() != 0){ // Presence d'une limite de client 
-				if (chanel.in_list_client.size() == static_cast<size_t>(chanel.getLimitClient()))
+				if (chanel.count_client() == chanel.getLimitClient())
                 {
                     //Message channel plein
 					return ;
@@ -106,7 +106,7 @@ void	Server::JOIN(int fd, std::string param)
 					//Message Badchannelkey
 					return ;
 				}
-				if (chanel.getPassword() != (*itkeys))
+				if (chanel.getPasswrd() != (*itkeys))
                 {
                     //Message Badchannelkey					
                     return ;

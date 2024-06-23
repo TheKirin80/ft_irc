@@ -1,4 +1,4 @@
-#include "libIRC.hpp"
+#include "../libIRC.hpp"
 
 void	Server::NICK(int fd, std::string param){
 

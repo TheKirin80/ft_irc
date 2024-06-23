@@ -74,8 +74,8 @@ void	Server::add_channel_serv(int fd, std::string name)
 	Client  client = this->getClientWithFd(fd);
 	Channel channel = this->getChannelWithName(name); // Passe la reference du channel dans le vector channel du serv
 	channel.add_client(client);
-	channel.add_op_client();
-	client.add_chan(channel);
+	channel.add_op_client(client);
+	client.add_channel(channel);
 }
 void	Server::rm_channel_serv(std::string channel)
 {
@@ -209,8 +209,8 @@ int	Server::inListClientServ(std::string name_client)
 
 void Server::rm_fd(int fd)
 {
-	std::vector<struct pollfd>::iterator ut = this->_list_fd.begin();
-	for (;it != _list_fd.end(), it++)
+	std::vector<struct pollfd>::iterator it = this->_list_fd.begin();
+	for (; it != this->_list_fd.end(); it++)
 	{
 		if ((*it).fd == fd)
 		{
@@ -220,14 +220,14 @@ void Server::rm_fd(int fd)
 	}
 }
 
-void	Server::close_fd()
-{
-	for(size_t i = 0; i < clients.size(); i++){
-		std::cout << RED << "Client <" << clients[i].GetFd() << "> Disconnected" << WHI << std::endl;
-		close(clients[i].GetFd());
-	}
-	if (server_fdsocket != -1){	
-		std::cout << RED << "Server <" << server_fdsocket << "> Disconnected" << WHI << std::endl;
-		close(server_fdsocket);
-	}
-}
+// void	Server::close_fd()
+// {
+// 	for(size_t i = 0; i < clients.size(); i++){
+// 		std::cout << RED << "Client <" << clients[i].GetFd() << "> Disconnected" << WHI << std::endl;
+// 		close(clients[i].GetFd());
+// 	}
+// 	if (server_fdsocket != -1){	
+// 		std::cout << RED << "Server <" << server_fdsocket << "> Disconnected" << WHI << std::endl;
+// 		close(server_fdsocket);
+// 	}
+// }

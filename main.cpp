@@ -25,7 +25,7 @@ int main(int ac, char **av)
         std::cerr << RED << "Bad format of password param. Need a password with 20 carac max" << RESET << std::endl;
         return (1);
     }
-    //BOUCLE DE LANCEMENT DES SOCKETS
-    
+    Server server(atoi(port.c_str()), passwrd);
+    server.loop_server();    
     return (0);
 }

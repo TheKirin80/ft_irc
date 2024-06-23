@@ -146,3 +146,13 @@ void Channel::rm_passwrd(void)
 {
 	this->_passwrd.clear();
 }
+int Channel::count_client(void)
+{
+    std::vector<Client>::iterator it = this->_list_client.begin();
+    int count = 0;
+    for (; it != this->_list_client.end(); it++)
+    {
+        count++;
+    }
+    return (count);
+}

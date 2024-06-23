@@ -1,4 +1,4 @@
-#include "libIRC.hpp"
+#include "../libIRC.hpp"
 
 void	Server::INVITE(int fd, std::string param){
 	std::vector<std::string>	args;

@@ -1,4 +1,4 @@
-#include "libIRC.hpp"
+#include "../libIRC.hpp"
 
 static std::string	formRealname(std::vector<std::string> args){
 	std::string realname;

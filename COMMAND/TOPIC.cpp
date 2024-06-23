@@ -1,4 +1,4 @@
-#include "libIRC.hpp"
+#include "../libIRC.hpp"
 
 void	Server::TOPIC(int fd, std::string param)
 {

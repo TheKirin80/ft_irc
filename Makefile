@@ -1,24 +1,28 @@
-SRCS =	main.cpp\
-		Client.cpp\
-		Channel.cpp\
-		Server.cpp\
-		/COMMAND/CAP.cpp\
-		/COMMAND/INVITE.cpp\
-		/COMMAND/JOIN.cpp\
-		/COMMAND/KICK.cpp\
-		/COMMAND/MODE.cpp\
-		/COMMAND/NICK.cpp\
-		/COMMAND/PART.cpp\
-		/COMMAND/PASS.cpp\
-		/COMMAND/PRIVMSG.cpp\
-		/COMMAND/QUIT.cpp\
-		/COMMAND/TOPIC.cpp\
-		/COMMAND/USER.cpp\
+DOC_COMMAND		= COMMAND
+FILES_COMMAND = CAP.cpp\
+				INVITE.cpp\
+				JOIN.cpp\
+				KICK.cpp\
+				MODE.cpp\
+				NICK.cpp\
+				PART.cpp\
+				PASS.cpp\
+				PRIVMSG.cpp\
+				QUIT.cpp\
+				TOPIC.cpp\
+				USER.cpp
+SRCS =			main.cpp\
+				Client.cpp\
+				Channel.cpp\
+				Server.cpp\
+				loop.cpp
 
 INC		= -I includes -I /usr/include
 
-OBJS	= ${SRCS:.cpp=.o}
-
+SRCS_COMMAND	= $(addprefix $(DOC_COMMAND)/, $(FILES_COMMAND))
+OBJ_COMMAND = ${SRCS_COMMAND:.cpp=.o}
+OBJ	= ${SRCS:.cpp=.o}
+OBJS = $(OBJ_COMMAND) $(OBJ)
 NAME 	= ircserv
 
 CXX 		= c++

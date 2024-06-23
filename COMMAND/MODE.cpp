@@ -1,4 +1,4 @@
-#include "libIRC.hpp"
+#include "../libIRC.hpp"
 
 // static int	check_kol(std::string params){
 // 	int	how_many = 0;
@@ -76,19 +76,19 @@ void	Server::MODE(int fd, std::string param)
         //ERR_CHANOPRIVSNEEDED
 		return ;
 	}
-    std::vector<string>::iterator it = list_param.begin() + 1;
+    std::vector<std::string>::iterator it = list_param.begin() + 1;
 	if ((*it).at(0) == '+')
     {
         if ((*it).at(1) == 'i')
         {
-            if (this->getChannelWithName(list_param.at(0)).getOnlyInviteState == true)
+            if (this->getChannelWithName(list_param.at(0)).getOnlyInviteState()== true)
                 return ;
             else
                 this->getChannelWithName(list_param.at(0)).setOnlyInviteTrue();
         }
         if ((*it).at(1) == 't')
         {
-            if (this->getChannelWithName(list_param.at(0)).getRestrictedTopicState == true)
+            if (this->getChannelWithName(list_param.at(0)).getRestrictedTopicState() == true)
                 return ;
             else
                 this->getChannelWithName(list_param.at(0)).setRestrictedTopicTrue();
@@ -168,10 +168,10 @@ void	Server::MODE(int fd, std::string param)
         {
             if (list_param.size() < 3)
                 return ;
-            if (this->getChannelWithName(list_param.at(0)).is_client_in_chan(list_param[2]) == EXIT_FAILURE)
+            if (this->getChannelWithName(list_param.at(0)).in_list_client(list_param.at(2)) == ERROR)
                 return ;
-            if (this->getChannelWithName(list_param.at(0)).is_client_operator(list_param[2]) == EXIT_SUCCESS){
-                this->getChannelWithName(list_param.at(0)).remove_privilege_from_chan(get_client_by_name(list_param[2]));
+            if (this->getChannelWithName(list_param.at(0)).in_list_op_client(list_param.at(2)) == OK){
+                this->getChannelWithName(list_param.at(0)).rm_perm(this->getClientWithName(list_param.at(2)));
             }
         }
         if ((*it).at(1) == 'l')

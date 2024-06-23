@@ -1,8 +1,9 @@
-#include "libIRC.hpp"
+#include "../libIRC.hpp"
 
 
 void	Server::QUIT(int fd, std::string param)
 {
+	(void)param; // A enlever pour mettre le param en commentaire
 	std::vector<Client>::iterator itclient = this->_list_client_serv.begin();
 	std::vector<Channel>::iterator itchan = this->_list_channel_serv.begin();
     std::string part_param;

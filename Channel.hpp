@@ -34,6 +34,7 @@ class Channel
         void        rm_client(Client &client);
         int	        isChannelEmpty(void);
         void        rm_passwrd(void);
+        int         count_client(void);
 
     private :
         std::string         _name;
