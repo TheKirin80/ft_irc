@@ -90,9 +90,11 @@ void Server::exec_command(int fd, std::string param)
 {
 	std::string	_list_cmd[12] = {"INVITE", "JOIN", "KICK", "PART", "TOPIC", "PRIVMSG", "NICK", "PASS", "USER", "CAP", "MODE", "QUIT"};
 	std::vector<std::string> args = this->once_split(param, " ");
-	for (int i = 0; i < 12; ++i)
+	if (args.size() == 1)
+		args.push_back("");
+	for (int i = 0; i < 12; i++)
 	{
-		if (args.at(0).find(_list_cmd[i]) == 0)
+		if (args.at(0) == _list_cmd[i])
 		{
 			if (_list_cmd[i].compare("PASS") == 0)
 				this->PASS(fd, args.at(1));
@@ -128,13 +130,12 @@ void Server::receive_new_data(int fd)
 	std::vector<std::string> command;
 	char buff[1024];
 	memset(buff, 0, sizeof(buff));
-	Client client = this->getClientWithFd(fd);
-	ssize_t ret = recv(fd, buff, 1024, 0);
+	ssize_t ret = recv(fd, buff, sizeof(buff), 0);
 	if(ret <= 0)
 	{
 		std::cout << RED << "Client <" << fd << "> Disconnected" << RESET << std::endl;
-		client.rm_all_channel();
-		this->rm_client_serv(client.getNickname());
+		this->getClientWithFd(fd).rm_all_channel();
+		this->rm_client_serv(this->getClientWithFd(fd).getNickname());
 		this->rm_fd(fd);
 		close(fd);
 	}
@@ -143,22 +144,19 @@ void Server::receive_new_data(int fd)
 		memset(buff, '\0', 1024);
 	}
 	else
-	{ 
-		client._buff += buff;
- 		if(client._buff.find_first_of("\r\n") == std::string::npos)
-		{
-			std::cerr << RED << "Failed to find \r\n" << RESET << std::endl;
+	{
+		this->getClientWithFd(fd)._buff += buff;
+ 		if(this->getClientWithFd(fd)._buff.find_first_of("\r\n") == std::string::npos)
 			return;
-		}
-		command = splitReceivedBuffer(client._buff);
+		command = splitReceivedBuffer(this->getClientWithFd(fd)._buff);
 		std::vector<std::string>::iterator it = command.begin();
 		for (;it != command.end(); it++)
 		{
 			this->exec_command(fd, *it);
 		}
-		client._buff.clear();
+		this->getClientWithFd(fd)._buff.clear();
 	}
-	memset(buff, '\0', 1024);
+	memset(buff, 0, 1024);
 }
 
 void Server::loop_server()
@@ -169,20 +167,29 @@ void Server::loop_server()
 	std::cout << "Waiting to accept a connection...\n";
 	while (signal == false)
 	{
-		if((poll(&this->_list_fd.at(0),this->_list_fd.size(),-1) == -1) && signal == false){
+		if((poll(&_list_fd.at(0),this->_list_fd.size(),-1) == -1) && signal == false){
 			std::cerr << RED << "Failed to poll()" << RESET << std::endl;
-
+			return;
 		}
-		for (size_t i = 0; i < this->_list_fd.size(); i++)
+		for (size_t i = 0; i < _list_fd.size(); i++)
 		{
-			if (this->_list_fd.at(i).revents & POLLIN) // revents permet de savoir si un event est detecte 	
+			if (this->_list_fd[i].revents & POLLIN) // revents permet de savoir si un event est detecte 	
 			{
-				if (this->_list_fd.at(i).fd == this->_serv_fd)
+				if (this->_list_fd[i].fd == this->_serv_fd)
 					this->accept_new_client();
 				else
-					this->receive_new_data(this->_list_fd.at(i).fd);
+					this->receive_new_data(this->_list_fd[i].fd);
 			}
 		}
 	}
+	// 	if (this->_list_fd.at(0).revents == POLLIN) // revents permet de savoir si un event est detecte 	
+	// 	{
+	// 		this->accept_new_client();
+	// 	}
+	// 	else
+	// 	{
+	// 		this->receive_new_data(this->_list_fd.at(i).fd);
+	// 	}
+	// }
 	//close_fds();
 }

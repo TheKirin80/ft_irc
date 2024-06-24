@@ -231,3 +231,15 @@ void Server::rm_fd(int fd)
 // 		close(server_fdsocket);
 // 	}
 // }
+
+void Server::sendRepMessage(int fd, std::string to_send)
+{
+	if(send(fd, to_send.c_str(), to_send.size(), 0) == -1)
+		std::cerr << RED << "failed to use sendRepMessage with this fd : "<< fd << RESET << std::endl;
+}
+
+void Server::sendErrMessage(int fd, std::string to_send)
+{
+	if(send(fd, to_send.c_str(), to_send.size(), 0) == -1)
+		std::cerr << RED << "failed to use sendErrMessage  with this fd : "<< fd << RESET << std::endl;
+}

@@ -3,20 +3,27 @@
 void	Server::PASS(int fd, std::string param){
 	
 	Client client = this->getClientWithFd(fd);
-	if (client.getPassCheckState() == true){
+	if (param.empty())
+	{
+		this->sendErrMessage(fd, ERR_NEEDMOREPARAMS(this->_name, client.getNickname(), "PASS"));
 		return ;
 	}
-	if (client.getNickCheckState() == true){
+	if (client.getUserCheckState() == true)
+	{
 		return ;
 	}
-	if (client.getUserCheckState() == true){
+	if (client.getPassCheckState() == true)
+	{
+		this->sendErrMessage(fd, ERR_ALREADYREGISTERED(this->_name, client.getNickname()));
 		return ;
 	}
-	if (param.empty()){
+	// if (client.getNickCheckState() == true){
+	// 	return ;
+	// }
+	if (param != this->_passwrd_serv)
+	{
+		this->sendErrMessage(fd, ERR_PASSWDMISMATCH(this->_name, client.getNickname()));
 		return ;
 	}
-	if (param != this->_passwrd_serv){
-		return ;
-	}
-	client.setPassCheckTrue();
+	this->getClientWithFd(fd).setPassCheckTrue();
 }

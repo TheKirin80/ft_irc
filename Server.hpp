@@ -34,6 +34,8 @@ class Server
         void                     receive_new_data(int fd);
         void                     loop_server();
         void                     rm_fd(int fd);
+        void                     sendRepMessage(int fd, std::string to_send);
+        void                     sendErrMessage(int fd, std::string to_send);
 
         //COMMAND
         void	PASS(int fd, std::string param);
