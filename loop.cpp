@@ -148,6 +148,10 @@ void Server::receive_new_data(int fd)
 		this->getClientWithFd(fd)._buff += buff;
  		if(this->getClientWithFd(fd)._buff.find_first_of("\r\n") == std::string::npos)
 			return;
+		if (this->getClientWithFd(fd)._buff == "\r\n"){
+			this->getClientWithFd(fd)._buff.clear();
+			return;
+		}
 		command = splitReceivedBuffer(this->getClientWithFd(fd)._buff);
 		std::vector<std::string>::iterator it = command.begin();
 		for (;it != command.end(); it++)
