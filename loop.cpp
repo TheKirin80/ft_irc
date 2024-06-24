@@ -77,7 +77,7 @@ static std::vector<std::string> splitReceivedBuffer(std::string str)
 	std::string line;
 	size_t pos;
 
-	while((pos = str.find_first_of("\r\n")) != std::string::npos)
+	while((pos = str.find("\r\n")) != std::string::npos)
 	{
 		line = str.substr(0, pos);
 		ret.push_back(line);
@@ -146,17 +146,18 @@ void Server::receive_new_data(int fd)
 	else
 	{
 		this->getClientWithFd(fd)._buff += buff;
- 		if(this->getClientWithFd(fd)._buff.find_first_of("\r\n") == std::string::npos)
+		std::cout << "----" << this->getClientWithFd(fd)._buff << "----" << std::endl;
+ 		if(this->getClientWithFd(fd)._buff.find("\r\n") == std::string::npos)
 			return;
+		std::cout << "je suis la connard" << std::endl;
 		if (this->getClientWithFd(fd)._buff == "\r\n"){
 			this->getClientWithFd(fd)._buff.clear();
 			return;
 		}
 		command = splitReceivedBuffer(this->getClientWithFd(fd)._buff);
-		std::vector<std::string>::iterator it = command.begin();
-		for (;it != command.end(); it++)
+		for (size_t i = 0; i < command.size() ; i++)
 		{
-			this->exec_command(fd, *it);
+			this->exec_command(fd, command[i]);
 		}
 		this->getClientWithFd(fd)._buff.clear();
 	}
@@ -186,14 +187,5 @@ void Server::loop_server()
 			}
 		}
 	}
-	// 	if (this->_list_fd.at(0).revents == POLLIN) // revents permet de savoir si un event est detecte 	
-	// 	{
-	// 		this->accept_new_client();
-	// 	}
-	// 	else
-	// 	{
-	// 		this->receive_new_data(this->_list_fd.at(i).fd);
-	// 	}
-	// }
 	//close_fds();
 }

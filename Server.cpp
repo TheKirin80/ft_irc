@@ -1,6 +1,6 @@
 #include "libIRC.hpp"
 
-Server::Server(int port, std::string passwrd) : _name("ft_irc"), _port(port), _passwrd_serv(passwrd)
+Server::Server(int port, std::string passwrd) : _name("ft_irc"), _port(port), _passwrd_serv(passwrd), _list_client_serv(), _list_channel_serv(), _list_fd(), _serv_fd(0)
 {
     return;
 }

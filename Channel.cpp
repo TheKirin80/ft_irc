@@ -1,6 +1,6 @@
 #include "libIRC.hpp"
 
-Channel::Channel(std::string name) : _name(name), _passwrd(""), _topic(""), _limit_client(0), _restricted_topic(false), _only_invite(false)
+Channel::Channel(std::string name) : _name(name), _passwrd(""), _topic(""), _limit_client(0), _restricted_topic(false), _only_invite(false), _list_client(), _list_op_client()
 {
     return;
 }

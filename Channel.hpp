@@ -38,13 +38,13 @@ class Channel
 
     private :
         std::string         _name;
-        std::vector<Client> _list_client;
-        std::vector<Client> _list_op_client;
         std::string         _passwrd;
         std::string         _topic;
         int                 _limit_client;
         bool                _restricted_topic;
         bool                _only_invite;
+        std::vector<Client> _list_client;
+        std::vector<Client> _list_op_client;
 
 };
 

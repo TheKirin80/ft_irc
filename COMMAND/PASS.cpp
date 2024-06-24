@@ -1,7 +1,7 @@
 #include "../libIRC.hpp"
 
-void	Server::PASS(int fd, std::string param){
-	
+void	Server::PASS(int fd, std::string param)
+{
 	Client client = this->getClientWithFd(fd);
 	if (param.empty())
 	{
