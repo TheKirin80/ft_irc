@@ -66,14 +66,15 @@ void	Server::KICK(int fd, std::string param)
 	std::vector<std::string>	args;
     Client                      client = this->getClientWithFd(fd);
 
-	if (client.getUserCheckState() == false){
-		//message user not register
+	if (client.getUserCheckState() == false)
+    {
+		this->sendErrMessage(fd, "USER not registered yet so command rejected\r\n");
 		return ;
 	}
 	args = this->multi_split(param, " ");
 	if (args.size() < 2)
     {
-        //Error number of parameters
+        this->sendErrMessage(fd, ERR_NEEDMOREPARAMS(this->_name, client.getNickname(), "KICK"));
         return;
 	}
 	param_users = getUsers(param);
@@ -84,7 +85,7 @@ void	Server::KICK(int fd, std::string param)
 	list_channels = this->multi_split(param_channels, ",");
 	if (list_users.size() > 1 && list_channels.size() > 1)
     {
-		//to_send = "referring to RFC2812: \"The server MUST NOT send KICK messages with multiple channels or users to clients.\"\r\n";
+		this->sendErrMessage(fd, "\"The server MUST NOT send KICK messages with multiple channels or users to clients.\" CF RFC 2812\r\n");
 		return ;
 	}
     if (list_channels.size() > 1) // Cas de plusieurs channels

@@ -57,6 +57,9 @@ void	Server::MODE(int fd, std::string param)
 		return ;
 	}
 	list_param = this->multi_split(param, " ");
+    if (this->inListClientServ(list_param.at(0)) == OK){
+        return;
+    }
 	if (this->inListChannelServ(list_param.at(0)) == ERROR) 
     {
         this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, list_param.at(0)));
