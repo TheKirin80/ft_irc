@@ -92,7 +92,7 @@ void	Server::KICK(int fd, std::string param)
     {
         if (this->inListClientServ(param_users) == ERROR) // client a kick existe ?
         {
-            //Error no such nickname
+			this->sendErrMessage(fd, ERR_NOSUCHNICK(this->_name, this->getClientWithName(param_users).getNickname()));
             return;
         }
         std::vector<std::string>::iterator it = list_channels.begin();
@@ -100,56 +100,46 @@ void	Server::KICK(int fd, std::string param)
         {
             if (this->inListChannelServ(*it) == ERROR) // channel existe ? 
             {
-                //Erreur channel n'existe pas
+                this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, (*it)));
 				return;
 			}
             if (client.in_channel(*it) == ERROR) // client qui kick possede le channel ?
             {
-                //Erreur client n'a pas le channel
+                this->sendErrMessage(fd, ERR_NOTONCHANNEL(this->_name, client.getNickname(), (*it)));
 				return ;
 			}
-            if (this->getChannelWithName(*it).in_list_client(client.getNickname()) == ERROR) // client qui kick appartient au channel ? 
-            {
-                //Erreur client pas dans le channel
-                return;
-            }
             if (this->getChannelWithName(*it).in_list_op_client(client.getNickname()) == ERROR) // client qui kick operateur ? 
             {
-                //Erreur non operateur
+                this->sendErrMessage(fd, ERR_CHANOPRIVSNEEDED(this->_name, client.getNickname(), (*it)));
 				return ;
 			}
             if (this->getChannelWithName(*it).in_list_client(param_users) == ERROR) // client a kick appartient au channel ? 
             {
-                //Erreur client a kick n'est pas dans le channel
+                this->sendErrMessage(fd, ERR_USERNOTINCHANNEL(this->_name, client.getNickname(), this->getClientWithName(param_users).getNickname(), (*it)));
                 return;
             }
         }
         it = list_channels.begin();
         for (; it != list_channels.end() ; it++)
         {
-            this->PART(this->getClientWithName(param_users).getFd(), *it);
+            this->PART(this->getClientWithName(param_users).getFd(), *it);	
         }
     }
     else // Cas d'un channel
     {
         if (this->inListChannelServ(param_channels) == ERROR) // channel existe ?
         {
-            //Error no such channel 
+            this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, param_channels));
             return;
         }
 		if (client.in_channel(param_channels) == ERROR) // client qui kick possede le channel ?
 		{
-			//Erreur client n'a pas le channel
+			this->sendErrMessage(fd, ERR_NOTONCHANNEL(this->_name, client.getNickname(), param_channels));
 			return ;
-		}
-		if (this->getChannelWithName(param_channels).in_list_client(client.getNickname()) == ERROR) // client qui kick appartient au channel ? 
-		{
-			//Erreur client pas dans le channel
-			return;
 		}
 		if (this->getChannelWithName(param_channels).in_list_op_client(client.getNickname()) == ERROR) // client qui kick operateur ? 
 		{
-			//Erreur non operateur
+			this->sendErrMessage(fd, ERR_CHANOPRIVSNEEDED(this->_name, client.getNickname(), param_channels));
 			return ;
 		}
         std::vector<std::string>::iterator it = list_users.begin();
@@ -157,12 +147,12 @@ void	Server::KICK(int fd, std::string param)
         {
             if (this->inListClientServ(*it) == ERROR) // client a kick existe ?
 			{
-				//Error no such nickname
+				this->sendErrMessage(fd, ERR_NOSUCHNICK(this->_name, this->getClientWithName(*it).getNickname()));
 				return;
 			}
 			if (this->getChannelWithName(param_channels).in_list_client(*it) == ERROR) // client a kick appartient au channel ? 
             {
-                //Erreur client a kick n'est pas dans le channel
+                this->sendErrMessage(fd, ERR_USERNOTINCHANNEL(this->_name, client.getNickname(), this->getClientWithName(*it).getNickname(), param_channels));
                 return;
             }
         }
