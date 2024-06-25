@@ -30,12 +30,12 @@ void	Server::USER(int fd, std::string param){
 		this->sendErrMessage(fd, "NICK not done, need to set it before doing USER\r\n");
 		return ;
 	}
-	// if (client.getUserCheckState() == true) 
-    // {
-	// 	this->sendErrMessage(fd, ERR_ALREADYREGISTRED())
-	// 	this->QUIT(fd);
-	// 	return ;
-	// }
+	if (client.getUserCheckState() == true) 
+    {
+		this->sendErrMessage(fd, ERR_ALREADYREGISTRED(this->_name, client.getNickname()));
+		this->QUIT(fd, "");
+		return ;
+	}
 	if (param.empty())
     {
 		this->sendErrMessage(fd, ERR_NEEDMOREPARAMS(this->_name, client.getNickname(), "USER"));

@@ -27,7 +27,7 @@ void	Server::PART(int fd, std::string param)
     {
 		if (this->inListChannelServ(*it) == ERROR)
         {
-			this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, (*it)));
+			this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, client.getNickname(), (*it)));
 			return ;
 		}
 	}

@@ -90,17 +90,12 @@ void	Server::KICK(int fd, std::string param)
 	}
     if (list_channels.size() > 1) // Cas de plusieurs channels
     {
-        if (this->inListClientServ(param_users) == ERROR) // client a kick existe ?
-        {
-			this->sendErrMessage(fd, ERR_NOSUCHNICK(this->_name, this->getClientWithName(param_users).getNickname()));
-            return;
-        }
         std::vector<std::string>::iterator it = list_channels.begin();
         for (; it != list_channels.end() ; it++)
         {
             if (this->inListChannelServ(*it) == ERROR) // channel existe ? 
             {
-                this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, (*it)));
+                this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, client.getNickname(), (*it)));
 				return;
 			}
             if (client.in_channel(*it) == ERROR) // client qui kick possede le channel ?
@@ -113,11 +108,19 @@ void	Server::KICK(int fd, std::string param)
                 this->sendErrMessage(fd, ERR_CHANOPRIVSNEEDED(this->_name, client.getNickname(), (*it)));
 				return ;
 			}
-            if (this->getChannelWithName(*it).in_list_client(param_users) == ERROR) // client a kick appartient au channel ? 
-            {
-                this->sendErrMessage(fd, ERR_USERNOTINCHANNEL(this->_name, client.getNickname(), this->getClientWithName(param_users).getNickname(), (*it)));
-                return;
-            }
+			if (this->inListClientServ(param_users) == OK) // client a kick existe ?
+			{
+            	if (this->getChannelWithName(*it).in_list_client(param_users) == ERROR) // client a kick appartient au channel ? 
+				{
+					this->sendErrMessage(fd, ERR_USERNOTINCHANNEL(this->_name, client.getNickname(), this->getClientWithName(param_users).getNickname(), (*it)));
+					return;
+				}
+			}
+			else
+       		{
+				this->sendErrMessage(fd, ERR_NOSUCHNICK(this->_name, client.getNickname(), this->getClientWithName(param_users).getNickname()));
+            	return;
+        	}
         }
         it = list_channels.begin();
         for (; it != list_channels.end() ; it++)
@@ -129,7 +132,7 @@ void	Server::KICK(int fd, std::string param)
     {
         if (this->inListChannelServ(param_channels) == ERROR) // channel existe ?
         {
-            this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, param_channels));
+            this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, client.getNickname(), param_channels));
             return;
         }
 		if (client.in_channel(param_channels) == ERROR) // client qui kick possede le channel ?
@@ -147,12 +150,12 @@ void	Server::KICK(int fd, std::string param)
         {
             if (this->inListClientServ(*it) == ERROR) // client a kick existe ?
 			{
-				this->sendErrMessage(fd, ERR_NOSUCHNICK(this->_name, this->getClientWithName(*it).getNickname()));
+				this->sendErrMessage(fd, ERR_NOSUCHNICK(this->_name, client.getNickname(), *it));
 				return;
 			}
 			if (this->getChannelWithName(param_channels).in_list_client(*it) == ERROR) // client a kick appartient au channel ? 
             {
-                this->sendErrMessage(fd, ERR_USERNOTINCHANNEL(this->_name, client.getNickname(), this->getClientWithName(*it).getNickname(), param_channels));
+                this->sendErrMessage(fd, ERR_USERNOTINCHANNEL(this->_name, client.getNickname(), *it, param_channels));
                 return;
             }
         }

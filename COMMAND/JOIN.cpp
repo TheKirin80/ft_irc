@@ -78,7 +78,7 @@ void	Server::JOIN(int fd, std::string param)
     {
 		if (this->checkChannelName(*itchannel) == ERROR)
         {
-            this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, (*itchannel))); 
+            this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, client.getNickname(), (*itchannel))); 
 			return ;
         }
     }

@@ -89,6 +89,8 @@ static std::vector<std::string> splitReceivedBuffer(std::string str)
 void Server::exec_command(int fd, std::string param)
 {
 	std::string	_list_cmd[12] = {"INVITE", "JOIN", "KICK", "PART", "TOPIC", "PRIVMSG", "NICK", "PASS", "USER", "CAP", "MODE", "QUIT"};
+	if (param.empty()|| param == " ")
+		return ;
 	std::vector<std::string> args = this->once_split(param, " ");
 	if (args.size() == 1)
 		args.push_back("");
@@ -158,7 +160,7 @@ void Server::receive_new_data(int fd)
 		{
 			this->exec_command(fd, command[i]);
 		}
-		std::cout << RED << "jai pas encore crash connard\n\n\n\n" << RESET <<std::endl;
+		// std::cout << RED << "jai pas encore crash connard\n\n\n\n" << RESET <<std::endl;
 		if (ckeckFdExist(fd) == OK)
 			this->getClientWithFd(fd)._buff.clear();
 	}

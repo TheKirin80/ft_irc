@@ -28,17 +28,27 @@
 
 static int  checkFlag(std::vector<std::string> &list_param)
 {
+    std::cout << RED << "1 "<< list_param.at(1) << std::endl;
     if (list_param.at(1).size() != 2)
         return (ERROR);
+    std::cout << RED << "2 "<< list_param.at(1) << std::endl;
     if (list_param.at(1).at(0) != '+' && list_param.at(1).at(0) != '-')
         return (ERROR);
-    if (list_param.at(1).find_first_not_of("itkol", 1))
+    std::cout << RED << "3 "<< list_param.at(1) << std::endl;
+    // if (list_param.at(1).find_first_not_of("itkol", 1))
+    //     return (ERROR);
+    if (list_param.at(1).at(1) != 'i' && list_param.at(1).at(1) != 't' && list_param.at(1).at(1) != 'k' && list_param.at(1).at(1) != 'o' && list_param.at(1).at(1) != 'l')
         return (ERROR);
-    // if (list_param.at(1).at(1) != 'i' && list_param.at(1).at(1) != 't' && list_param.at(1).at(1) != 'k' && list_param.at(1).at(1) != 'o' && list_param.at(1).at(1) != 'l')
-    //     return (ERROR)
+    std::cout << RED << "4 "<< list_param.at(1) << std::endl;
     return (OK);
 }
-
+static int  isStringDigit(std::string str){
+    for (size_t i = 0; i < str.size(); i++){
+        if (!isdigit(str[i]))
+            return (ERROR);
+    }
+    return (OK);
+}
 
 
 void	Server::MODE(int fd, std::string param) 
@@ -62,7 +72,7 @@ void	Server::MODE(int fd, std::string param)
     }
 	if (this->inListChannelServ(list_param.at(0)) == ERROR) 
     {
-        this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, list_param.at(0)));
+        this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, client.getNickname(), list_param.at(0)));
 		return ;
 	}
 	if (list_param.size() == 1)
@@ -81,6 +91,8 @@ void	Server::MODE(int fd, std::string param)
 		return ;
 	}
     std::vector<std::string>::iterator it = list_param.begin() + 1;
+    std::cout << RED << "jeisbdkjasdb" << RESET << std::endl;
+    std::cout << RED << *it << RESET << std::endl;
 	if ((*it).at(0) == '+')
     {
         if ((*it).at(1) == 'i')
@@ -143,7 +155,7 @@ void	Server::MODE(int fd, std::string param)
             {
                 return ;
             }
-            if (isdigit(list_param.at(2).at(0)) == 0 || isdigit(list_param.at(2).at(1)) == 0)
+            if (isStringDigit(list_param[2]) == ERROR)
             {
                 return;
             }

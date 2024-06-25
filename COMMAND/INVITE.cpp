@@ -22,7 +22,7 @@ void	Server::INVITE(int fd, std::string param){
 	}
 	if (this->inListClientServ(args.at(0)) == ERROR)
     {
-		this->sendErrMessage(fd, ERR_NOSUCHNICK(this->_name, args.at(0)));
+		this->sendErrMessage(fd, ERR_NOSUCHNICK(this->_name, client.getNickname(), args.at(0)));
         return ;
 	}
 	if (client.in_channel(args.at(1)) == ERROR)

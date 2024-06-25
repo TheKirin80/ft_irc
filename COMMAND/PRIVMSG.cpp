@@ -18,7 +18,7 @@ void	Server::PRIVMSG(int fd, std::string param)
 	list_param = this->once_split(param, " ");
 	if (list_param.size() == 1)
     {
-		this->sendErrMessage(fd,"412 :No text to send\r\n");
+		this->sendErrMessage(fd, ERR_NOTEXTTOSEND(_name, client.getNickname()));
 		return ;
 	}
 	if (this->inListClientServ(list_param.at(0)) == OK)
@@ -27,11 +27,11 @@ void	Server::PRIVMSG(int fd, std::string param)
 	}
 	else if (this->inListChannelServ(list_param.at(0)) == OK)
     {
-        this->getChannelWithName(list_param.at(0)).replyToAll(PRIVSMG_CHAN_INFO(client.getNickname(), client.getUsername(), this->_name, list_param.at(0), list_param.at(1)));
+        this->getChannelWithName(list_param.at(0)).replyToAllButNotMe(PRIVSMG_CHAN_INFO(client.getNickname(), client.getUsername(), this->_name, list_param.at(0), list_param.at(1)), fd);
 	}
     else
     {
-        this->sendErrMessage(fd, ERR_NOSUCHNICK(this->_name, this->getClientWithName(list_param.at(0)).getNickname()));
+        this->sendErrMessage(fd, ERR_NOSUCHNICK(this->_name, client.getNickname(), list_param.at(0)));
         return;
     }
 }

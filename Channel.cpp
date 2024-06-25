@@ -88,14 +88,18 @@ void Channel::setOnlyInviteFalse(void)
 //Utilitaires
 int Channel::in_list_client(std::string client)
 {
-    for(std::vector<Client>::iterator it = this->_list_client.begin(); it != this->_list_client.end();it++)
+    std::vector<Client>::iterator it = this->_list_client.begin();
+    std::vector<Client>::iterator ite = this->_list_client.end();
+    for(; it != ite;it++)
         if ((*it).getNickname() == client)
             return (OK);
     return (ERROR);
 }
 int Channel::in_list_op_client(std::string client)
 {
-    for(std::vector<Client>::iterator it = this->_list_op_client.begin(); it != this->_list_op_client.end();it++)
+    std::vector<Client>::iterator it = this->_list_op_client.begin();
+    std::vector<Client>::iterator ite = this->_list_op_client.end();
+    for(; it != ite;it++)
         if ((*it).getNickname() == client)
             return (OK);
     return (ERROR);
@@ -189,6 +193,16 @@ void Channel::replyToAll(std::string reply)
     for (;it != this->_list_client.end(); it++)
     {
         sendRepMessageChannel((*it).getFd(), reply);
+    }
+}
+
+void Channel::replyToAllButNotMe(std::string reply, int fd)
+{
+	std::vector<Client>::iterator it = _list_client.begin();
+    for (;it != this->_list_client.end(); it++)
+    {
+        if ((*it).getFd() != fd)
+            sendRepMessageChannel((*it).getFd(), reply);
     }
 }
 void Channel::replyToAllTopic(std::string origin, std::string serv_name, std::string topic)

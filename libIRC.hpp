@@ -1,8 +1,8 @@
 #ifndef LIBIRC_HPP
 #define LIBIRC_HPP
 
-#define BLUE		"\033[1;34m"
-#define RED			"\033[1;31m"
+#define BLUE		"\033[1;5;34m"
+#define RED			"\033[1;5;31m"
 #define RESET		"\033[0m"
 
 #define OK          0
@@ -29,12 +29,13 @@
 
 //!TODO Macro ERR
 # define ERR_NOMOTD(server, nickname) (":" + server + " 422 " + nickname + " :MOTD File is missing\r\n")
-# define ERR_NOSUCHCHANNEL(server, channel) (": " + server + " 403 " + channel + " :No such channel\r\n")
-# define ERR_NOTONCHANNEL(server, nickname, channel) (": " + server + " 442 " + nickname + " " + channel + " :The user is not on this channel.\r\n")
+# define ERR_NOSUCHCHANNEL(server, nickname, channel) (":" + server + " 403 " + nickname + " " + channel + " :No such channel\r\n")
+# define ERR_NOTONCHANNEL(server, nickname, channel) (":" + server + " 442 " + nickname + " " + channel + " :You're not on that channel\r\n")
+# define ERR_NOTEXTTOSEND(server, nickname) (":" + server + " 412 " + nickname  + " :No text to send\r\n")
 # define ERR_CANNOTSENDTOCHAN(server, nickname, channel) (":" + server + " 404 " + nickname + " " + channel + " :Cannot send to channel\r\n")
 # define ERR_USERONCHANNEL(server, user, target, channel) (":" + server + " 443 " + user + " " + target + " " + channel + " :is already on channel.\r\n")
-# define ERR_NOSUCHNICK(server, user) (":" + server + " 401 " + user + " :No such user\r\n")
-# define ERR_ALREADYREGISTERED(serv, nickname) (":" + serv + " 462 " + nickname + " :You may not reregister.\r\n")
+# define ERR_NOSUCHNICK(server, nickname, user) (":" + server + " 401 " + nickname + " " + user + " :No such nick/channel\r\n")
+# define ERR_ALREADYREGISTRED(server, client) (":" + server + " 462 " + client + " :Unauthorized command (already registered)\r\n")
 # define ERR_NEEDMOREPARAMS(server, nickname, command) (":" + server + " 461 " + nickname + " " + command + " :Not enough parameters.\r\n")
 # define ERR_CHANNELISFULL(server, nick, chan) (":" + server + " 471 " + nick + " " + chan + " :Cannot join channel (+l)\r\n")
 # define ERR_UNKNOWNMODE(server, nickname, mode, channel)	(":" + server + " 472 " + nickname + " " + mode + " :is unknown mode char to me for " + channel + "\r\n")
@@ -78,7 +79,7 @@
 # define MODE_INFO(client, username, server, channel, mod) (":" + client + "!~" + username + "@" + server + " " + "MODE "+ channel + mod + "\r\n")
 # define TOPIC_ALERT(client, username_cible, server, channel, topic) (":" + client + "!~" + username_cible + "@" + serv_name + " TOPIC " + channel + " :" + topic + "\r\n")
 # define INVITE_INFO(client, username, server, clientcible, channel) (":" + client + "!~" + username + "@" + server + " INVITE " + clientcible + " :" + channel + "\r\n")
-# define PART_INFO(client, username, server, channel, comment) (":" + client + "!~" + username + "@" + server + " PART " + channel + comment)
+# define PART_INFO(client, username, server, channel, comment) (":" + client + "!~" + username + "@" + server + " PART " + channel + comment + "\r\n")
 # define PRIVSMG_CLI_INFO(client, clientcible, server, message)(":" + client + "!~" + clientcible + "@" + server + " PRIVMSG " + clientcible + " " + message + "\r\n")
 # define PRIVSMG_CHAN_INFO(client, username, server, channel, message)(":" + client + "!~" + username + "@" + server + " PRIVMSG " + channel + " " + message + "\r\n")
 #endif

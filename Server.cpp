@@ -29,8 +29,9 @@ std::string Server::getPasswrdServ(void) const
 Client &Server::getClientWithName(std::string client)
 {
     std::vector<Client>::iterator it = this->_list_client_serv.begin();
+    std::vector<Client>::iterator ite = this->_list_client_serv.end();
 	
-	for (; it != this->_list_client_serv.end(); it++){
+	for (; it != ite; it++){
 		if (client == (*it).getNickname())
 			return ((*it));
 	}
@@ -191,8 +192,9 @@ int	Server::checkChannelName(std::string name)
 int	Server::inListClientServ(std::string name_client)
 {
 	std::vector<Client>::iterator it = this->_list_client_serv.begin();
+	std::vector<Client>::iterator ite = this->_list_client_serv.end();
 
-	for (; it != this->_list_client_serv.end(); it++){
+	for (; it != ite; it++){
 		if (name_client == (*it).getNickname())
 			return (OK);
 	}
