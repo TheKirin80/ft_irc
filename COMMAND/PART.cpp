@@ -8,11 +8,13 @@ void	Server::PART(int fd, std::string param)
 
 	if (client.getUserCheckState() == false)
     {
+		this->sendErrMessage(fd, "USER not registered yet so command rejected\r\n");
 		return ;
 	}
 	if (param.empty())
     {
-        return;
+        this->sendErrMessage(fd, ERR_NEEDMOREPARAMS(this->_name, client.getNickname(), "PART"));
+		return ;
 	}
 	args = once_split(param, " "); // permet de separer les channels a quitter du potentiel message de sortie
 	if (args.size() > 1)
@@ -25,6 +27,7 @@ void	Server::PART(int fd, std::string param)
     {
 		if (this->inListChannelServ(*it) == ERROR)
         {
+			this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, (*it)));
 			return ;
 		}
 	}
@@ -33,13 +36,17 @@ void	Server::PART(int fd, std::string param)
     {
 		if (client.in_channel(*it) == ERROR)
         {
+			this->sendErrMessage(fd, ERR_NOTONCHANNEL(this->_name, client.getNickname(), (*it)));
 			return ;
 		}
 	}
     it = args.begin();
 	for (; it != args.end(); it++) // On supprime le channel du client et le client du channel et on supprime le channel si celui ci est vide
     {
-		//Gestion du message a envoyer dans chaque channel !ATTENTION! Penser a joindre le message s'il existe sinon mettre le nickname
+		if (part_message == "")
+			this->getChannelWithName(*it).replyToAll(PART_INFO(client.getNickname(), client.getUsername(), this->_name, (*it), ""));
+		else
+			this->getChannelWithName(*it).replyToAll(PART_INFO(client.getNickname(), client.getUsername(), this->_name, (*it), " " + part_message));
 		client.rm_channel((*it));
 		this->getChannelWithName((*it)).rm_client(client);
 		if (this->getChannelWithName((*it)).isChannelEmpty() == OK)
@@ -47,5 +54,4 @@ void	Server::PART(int fd, std::string param)
 			rm_channel_serv((*it));
         }
     }
-
 }

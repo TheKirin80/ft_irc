@@ -180,26 +180,9 @@ void	Server::MODE(int fd, std::string param)
             this->getChannelWithName(list_param.at(0)).setLimitClient(0);
         }
 	}
-    this->sendRepMessage(fd, MODE_INFO(client.getNickname(), client.getUsername(), this->_name, list_param.at(0), list_param.at(1)));
+    if (list_param.size() == 3)
+        this->sendRepMessage(fd, MODE_INFO(client.getNickname(), client.getUsername(), this->_name, list_param.at(0), " " + list_param.at(2)));
+    else
+        this->sendRepMessage(fd, MODE_INFO(client.getNickname(), client.getUsername(), this->_name, list_param.at(0), ""));
 }
 
-
-// ERR_NEEDMOREPARAMS pour le +k
-// ERR_KEYSET pour le +k, il y a deja un mdp
-// ERR_CHANOPRIVSNEEDED
-// ERR_USERNOTINCHANNEL
-// ERR_UNKNOWNMODE
-
-// RPL_CHANNELMODEIS
-// RPL_UNIQOPIS	pour le +o, utilisateur deja operateur
-
-// ! faire les modes +-ikot
-//	i pour inviteonly
-//	t pour restreindre ou non acces a la commande topic
-//	k pour ajouter un mdp au channel
-//	o pour creer un nouvel operateur chan
-//	l pour limiter le nombre de user d un chan
-
-
-
-#define ERR_USERNOTINCHANNEL(server, nickname, nickcible, channel) ":"+ server +" 441 "+ nickname + " " + nickcible + " " + channel + " :They aren't on that channel\r\n";

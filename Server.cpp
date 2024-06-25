@@ -264,7 +264,17 @@ void Server::replysNewChannel(int fd, std::string name_channel)
 	this->sendRepMessage(fd, RPL_NAMREPLY(this->_name, client.getNickname(), name_channel, "@"+client.getNickname()));
 	this->sendRepMessage(fd, RPL_ENDOFNAMES(this->_name, client.getNickname(), name_channel));
 }
-std::string	Server::channelModeIs(string name_chan)
+static std::string int_to_str(int num)
+{
+	std::stringstream stock;
+	std::string ret;
+
+	stock << num;
+	stock >> ret;
+	
+	return (ret);
+}
+std::string	Server::channelModeIs(std::string name_chan)
 {
 	std::string mod = "+";
 	Channel channel = this->getChannelWithName(name_chan);
@@ -281,7 +291,7 @@ std::string	Server::channelModeIs(string name_chan)
 	if (channel.getLimitClient() > 0)
 	{
 		mod += " ";
-		mod += itoa(channel.getLimitClient());
+		mod += int_to_str(channel.getLimitClient());
 	}
 	return (mod);
 }

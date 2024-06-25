@@ -38,7 +38,7 @@ class Server
         int                      ckeckFdExist(int fd);
         void                     replysExistChannel(int fd, std::string name_channel);
         void                     replysNewChannel(int fd, std::string name_channel);
-        std::string	             channelModeIs(string name_chan);
+        std::string	             channelModeIs(std::string name_chan);
 
 
         //COMMAND
