@@ -50,6 +50,8 @@
 # define ERR_BADCHANNELKEY(server, client, channel) (":" + server + " 475 " + client + " " + channel + " :Cannot join channel (+k)\r\n")
 # define ERR_KEYSET(server, client, channel)	(":" + server + " 467 " + client + " " + channel + " :Channel key already set\r\n")
 # define ERR_USERNOTINCHANNEL(server, nickname, nickcible, channel) (":"+ server +" 441 "+ nickname + " " + nickcible + " " + channel + " :They aren't on that channel\r\n")
+# define ERR_NORECIPIENT(server, command)(":" + server + "411 :No recipient given (" + command + ")\r\n")
+
 //!TODO Macro RPL
 # define RPL_UMODEIS(server, user, modes) (":" + server + " 221 "+ user + " :+" + modes + "\r\n")
 # define RPL_CHANNELMODIS(server, user, channel, modes) (":" + server + " 324 " + user + " " + channel + " " + modes + "\r\n")
@@ -77,4 +79,6 @@
 # define TOPIC_ALERT(client, username_cible, server, channel, topic) (":" + client + "!~" + username_cible + "@" + serv_name + " TOPIC " + channel + " :" + topic + "\r\n")
 # define INVITE_INFO(client, username, server, clientcible, channel) (":" + client + "!~" + username + "@" + server + " INVITE " + clientcible + " :" + channel + "\r\n")
 # define PART_INFO(client, username, server, channel, comment) (":" + client + "!~" + username + "@" + server + " PART " + channel + comment)
+# define PRIVSMG_CLI_INFO(client, clientcible, server, message)(":" + client + "!~" + clientcible + "@" + server + " PRIVMSG " + clientcible + " " + message + "\r\n")
+# define PRIVSMG_CHAN_INFO(client, username, server, channel, message)(":" + client + "!~" + username + "@" + server + " PRIVMSG " + channel + " " + message + "\r\n")
 #endif

@@ -7,31 +7,31 @@ void	Server::PRIVMSG(int fd, std::string param)
 
 	if (client.getUserCheckState() == false)
     {
-        //USER not registered yet
+		this->sendErrMessage(fd, "USER not registered yet so command rejected\r\n");
 		return ;
 	}
 	if (param.empty())
     {
-		//ERR_NORECIPIENT
+		this->sendErrMessage(fd, ERR_NORECIPIENT(this->_name, "PRIVMSG"));
 		return ;
 	}
 	list_param = this->once_split(param, " ");
 	if (list_param.size() == 1)
     {
-		//ERR_NOTEXTTOSEND
+		this->sendErrMessage(fd,"412 :No text to send\r\n");
 		return ;
 	}
 	if (this->inListClientServ(list_param.at(0)) == OK)
     {
-		//Message au client 
+		this->sendRepMessage(this->getClientWithName(list_param.at(0)).getFd(), PRIVSMG_CLI_INFO(client.getNickname(), list_param.at(0), this->_name, list_param.at(1)));
 	}
 	else if (this->inListChannelServ(list_param.at(0)) == OK)
     {
-        //message a tout les personnes du channel   
+        this->getChannelWithName(list_param.at(0)).replyToAll(PRIVSMG_CHAN_INFO(client.getNickname(), client.getUsername(), this->_name, list_param.at(0), list_param.at(1)));
 	}
     else
     {
-        //ERR_NOSUCHNICK
+        this->sendErrMessage(fd, ERR_NOSUCHNICK(this->_name, this->getClientWithName(list_param.at(0)).getNickname()));
         return;
     }
 }
