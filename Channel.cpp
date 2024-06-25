@@ -156,3 +156,38 @@ int Channel::count_client(void)
     }
     return (count);
 }
+std::string	Channel::getNicknameOfListClient(void)
+{
+	std::string	nicknames;
+    std::vector<Client>::iterator it = this->_list_client.begin();
+
+	for (; it != this->_list_client.end(); it++)
+    {
+        std::string nick = (*it).getNickname();
+		if (it == this->_list_client.begin())
+        {
+			nicknames = "@"+ nick + " ";
+		}
+		else
+        {
+			if (this->in_list_op_client(nick) == OK)
+				nicknames += "@";
+			nicknames += nick +" ";
+		}
+	}
+	nicknames.erase(nicknames.end()-1);
+	return nicknames;
+}
+void Channel::sendRepMessageChannel(int fd, std::string to_send)
+{
+	if(send(fd, to_send.c_str(), to_send.size(), 0) == -1)
+		std::cerr << RED << "failed to use sendRepMessage with this fd : "<< fd << RESET << std::endl;
+}
+void Channel::replyToAll(std::string reply)
+{
+	std::vector<Client>::iterator it = _list_client.begin();
+    for (;it != this->_list_client.end(); it++)
+    {
+        sendRepMessageChannel((*it).getFd(), reply);
+    }
+}

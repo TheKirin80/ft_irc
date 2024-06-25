@@ -35,6 +35,9 @@ class Channel
         int	        isChannelEmpty(void);
         void        rm_passwrd(void);
         int         count_client(void);
+        std::string	getNicknameOfListClient(void);
+        void        sendRepMessageChannel(int fd, std::string to_send);
+        void        replyToAll(std::string reply);
 
     private :
         std::string         _name;

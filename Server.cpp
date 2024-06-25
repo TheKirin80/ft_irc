@@ -246,3 +246,43 @@ int Server::ckeckFdExist(int fd)
 	}
 	return (ERROR);
 }
+
+void Server::replysExistChannel(int fd, std::string name_channel)
+{
+	Channel channel = this->getChannelWithName(name_channel);
+	Client client = this->getClientWithFd(fd);
+	std::cout << "in replyEXISTCHANNEL" << std::endl;
+	channel.replyToAll(JOIN_INFO(client.getNickname(), client.getUsername(), this->_name, name_channel));
+	this->sendRepMessage(fd, RPL_NAMREPLY(this->_name, client.getNickname(), name_channel, channel.getNicknameOfListClient()));
+	this->sendRepMessage(fd, RPL_ENDOFNAMES(this->_name, client.getNickname(), name_channel));
+}
+
+void Server::replysNewChannel(int fd, std::string name_channel)
+{
+	Channel channel = this->getChannelWithName(name_channel);
+	Client client = this->getClientWithFd(fd);
+	this->sendRepMessage(fd, JOIN_INFO(client.getNickname(), client.getUsername(), this->_name, name_channel));
+	this->sendRepMessage(fd, RPL_NAMREPLY(this->_name, client.getNickname(), name_channel, "@"+client.getNickname()));
+	this->sendRepMessage(fd, RPL_ENDOFNAMES(this->_name, client.getNickname(), name_channel));
+}
+std::string	Server::channelModeIs(string name_chan)
+{
+	std::string mod = "+";
+	Channel channel = this->getChannelWithName(name_chan);
+	if (channel.getOnlyInviteState() == true)
+		mod += "i";
+	if (channel.getRestrictedTopicState() == true)
+		mod += "t";
+	if (!channel.getPasswrd().empty())
+		mod += "k";
+	if (channel.getLimitClient() > 0)
+		mod += "l";
+	if (!channel.getPasswrd().empty())
+		mod += " " + channel.getPasswrd();
+	if (channel.getLimitClient() > 0)
+	{
+		mod += " ";
+		mod += itoa(channel.getLimitClient());
+	}
+	return (mod);
+}

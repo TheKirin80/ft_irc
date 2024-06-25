@@ -36,7 +36,7 @@
 # define ERR_ALREADYREGISTERED(serv, nickname) (":" + serv + " 462 " + nickname + " :You may not reregister.\r\n")
 # define ERR_NEEDMOREPARAMS(server, nickname, command) (":" + server + " 461 " + nickname + " " + command + " :Not enough parameters.\r\n")
 # define ERR_CHANNELISFULL(server, nick, chan) (":" + server + " 471 " + nick + " " + chan + " :Cannot join channel (+l)\r\n")
-# define ERR_MODEUNKNOWN(server, user, modechar) (":" + server + " 472 " + modechar + " :is unknown mode char to me.\r\n")
+# define ERR_UNKNOWNMODE(server, nickname, mode, channel)	(":" + server + " 472 " + nickname + " " + mode + " :is unknown mode char to me for " + channel + "\r\n")
 # define ERR_INVITEONLYCHAN(server, user, channel) ( ":" + server + " 473 " + user + " " + channel + " :Cannot join channel (+i).\r\n")
 # define ERR_CHANOPRIVSNEEDED(server, user, channel) ( ":" + server + " 482 " + user + " " + channel + " :You're not channel operator.\r\n")
 # define ERR_USERSDONTMATCHVIEW(server, user) (":" + server + " 502 " + user + " :Cant view mode for other users\r\n")
@@ -47,6 +47,8 @@
 # define ERR_ERRONEUSNICKNAME(server, client, nickname) (":" + server + " 432 " + client + " " + nickname + " :Erroneus nickname\r\n")
 # define ERR_NICKNAMEINUSE(server, client, nickname) (":" + server + " 433" + client + " " + nickname + " :Nickname is already in use\r\n")
 # define ERR_BADCHANNELKEY(server, client, channel) (":" + server + " 475 " + client + " " + channel + " :Cannot join channel (+k)\r\n")
+# define ERR_KEYSET(server, client, channel)	(":" + server + " 467 " + client + " " + channel + " :Channel key already set\r\n"
+# define ERR_USERNOTINCHANNEL(server, nickname, nickcible, channel) (":"+ server +" 441 "+ nickname + " " + nickcible + " " + channel + " :They aren't on that channel\r\n")
 //!TODO Macro RPL
 # define RPL_UMODEIS(server, user, modes) (":" + server + " 221 "+ user + " :+" + modes + "\r\n")
 # define RPL_CHANNELMODIS(server, user, channel, modes, modsarg) (":" + server + " 324 " + user + " " + channel + " " + modes + " " + modsarg + "\r\n")
@@ -58,13 +60,17 @@
 # define RPL_TOPICSET(userID, chan, msg) (userID + " TOPIC " + chan + " :" + msg + "\r\n")
 # define RPL_PRIVMSG(userID, target, msg) (userID + " PRIVMSG " + target + " :" + msg + "\r\n")
 # define RPL_KICK(userID, channel, target, reason) (userID + " KICK " + channel + " " + target + " :" + reason + "\r\n")
-# define RPL_NAMREPLY(server, client, symbol, channel, memberList) (":" + server + " 353 " + client + " " + symbol + " " + channel + " :" + memberList + "\r\n")
+# define RPL_NAMREPLY(server, client, channel, memberList) (":" + server + " 353 = " + client + " " + channel + " :" + memberList + "\r\n")
 # define RPL_STARTOFMOTD(server, nickname, message) (":" + server + " 375 " + nickname + " :- " + message + " Message of the day - \r\n")
 # define RPL_MOTD(server, nickname, motdLine) (":" + server + " 372 " + nickname + " :" + motdLine + "\r\n")
 # define RPL_ENDOFMOTD(server, nickname) (":" + server + " 376 " + nickname + " :End of /MOTD command.\r\n")
 # define RPL_WELCOME(server, nickname) (":" + server + " 001 " + nickname + " :Welcome to the Internet Relay Network " + nickname + "\r\n")
 # define RPL_YOURHOST(server,nickname) (":" + server + " 002 " + nickname + " :Your host is " + server + " (localhost)\r\n")
 # define RPL_INFO(server,nickname) (":" + server + " 003 " + nickname + " :This server was created by akefeder et arnduran.\r\n")
+# define RPL_UNIQOPIS(server, client, channel, nickcible)	":" + server " 325 " + client + " " + channel + " " + nickcible + "\r\n"
 //!TODO Macro info command
 # define QUIT_INFO(nickname, username, server, param) (":" + nickname + "!~" + username + "@" + server + " QUIT" + param + "\r\n")
+# define JOIN_INFO(nickname, username, server, channel) (":"+ nickname + "!~" + username + "@" + server +" JOIN :" + channel + "\r\n")
+# define MODE_INFO(client, username, server, channel, mod) (":" + client + "!~" + username + "@" + server + " " + "MODE "+ channel + " " + mod + "\r\n")
+
 #endif

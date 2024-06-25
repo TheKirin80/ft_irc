@@ -86,37 +86,41 @@ void	Server::JOIN(int fd, std::string param)
     itchannel = list_channels.begin();
 	for (; itchannel != list_channels.end(); itchannel++)
     {
-        Channel chanel = this->getChannelWithName(*itchannel);
-		if (inListChannelServ(*itchannel) == OK){ // Cas ou le channel est existant
+        
+		if (inListChannelServ(*itchannel) == OK)
+		{ // Cas ou le channel est existant
+			Channel chanel = this->getChannelWithName(*itchannel);
 			if (chanel.in_list_client(client.getNickname()) == OK)
 				continue ;
 			if (chanel.getOnlyInviteState() == true)
             {
-				this->sendErrMessage(fd, ERR_INVITEONLYCHAN(this->_name, client.getNickname(), (*itchannel)))
+				this->sendErrMessage(fd, ERR_INVITEONLYCHAN(this->_name, client.getNickname(), (*itchannel)));
 				return ;
 			}
 			if (chanel.getLimitClient() != 0){ // Presence d'une limite de client 
 				if (chanel.count_client() == chanel.getLimitClient())
                 {
-                    this->sendErrMessage(fd, ERR_CHANNELISFULL(this->_name, client.getNickname(), (*itchannel)))
+                    this->sendErrMessage(fd, ERR_CHANNELISFULL(this->_name, client.getNickname(), (*itchannel)));
 					return ;
 				}
 			}
 			if (!chanel.getPasswrd().empty()){ //Presence d'un mot de passe
 				if (keys.empty() || (chanel.getPasswrd() != (*itkeys)))
                 {
-					this->sendErrMessage(fd, ERR_BADCHANNELKEY(this->_name, client.getNickname(), (*itchannel)))
+					this->sendErrMessage(fd, ERR_BADCHANNELKEY(this->_name, client.getNickname(), (*itchannel)));
 					return ;
 				}
 			}
 			this->getClientWithFd(fd).add_channel(this->getChannelWithName(*itchannel));
 			this->getChannelWithName(*itchannel).add_client(this->getClientWithFd(fd));
-            //message d'ajout dans un channel existant
+            std::cout << "in JOIN EXIST" << std::endl;
+			this->replysExistChannel(fd,(*itchannel));
 		}
 		else //Creation d'un nouveau channel
         {
+			std::cout << "je uisla";
 			add_channel_serv(fd, *itchannel);
-            //message d'ajout dans un nouveau channel
+			this->replysNewChannel(fd, *itchannel);
 		}
 		itkeys++;
 	}

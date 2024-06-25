@@ -46,34 +46,35 @@ void	Server::MODE(int fd, std::string param)
 	std::vector<std::string> list_param;
     Client client = this->getClientWithFd(fd);
 
+    if (client.getUserCheckState() == false)
+    {
+		this->sendErrMessage(fd, "USER not registered yet so command rejected\r\n");
+		return ;
+	}
 	if (param.empty())
     {
+        this->sendErrMessage(fd, ERR_NEEDMOREPARAMS(this->_name, client.getNickname(), "MODE"));
 		return ;
 	}
 	list_param = this->multi_split(param, " ");
-	if (list_param.size() < 2)
+	if (this->inListChannelServ(list_param.at(0)) == ERROR) 
     {
-        //ERR_NEEDMOREPARAMS
+        this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, list_param.at(0)));
+		return ;
+	}
+	if (list_param.size() == 1)
+    {
+        this->sendRepMessage(fd, RPL_CHANNELMODIS(this->_name, client.getNickname(), list_param.at(0), this->channelModeIs(list_param.at(0))));
 		return ;
 	}
     if (checkFlag(list_param) == ERROR)
     {
-        //ERROR UnknowCommand
+        this->sendErrMessage(fd, ERR_UNKNOWNMODE(this->_name, client.getNickname(), list_param.at(1), list_param.at(0)));
         return;
     }
-	if (this->inListChannelServ(list_param.at(0)) == ERROR) 
-    {
-        //ERR_NOSUCHCHANNEL
-		return ;
-	}
-    if (this->getChannelWithName(list_param.at(0)).in_list_client(client.getNickname()) == ERROR)
-    {
-        //ERR_USERNOTINCHANNEL
-		return ;
-	}
 	if (this->getChannelWithName(list_param.at(0)).in_list_op_client(client.getNickname()) == ERROR)
     {
-        //ERR_CHANOPRIVSNEEDED
+        this->sendErrMessage(fd, ERR_CHANOPRIVSNEEDED(this->_name, client.getNickname(), list_param.at(0)));
 		return ;
 	}
     std::vector<std::string>::iterator it = list_param.begin() + 1;
@@ -103,7 +104,7 @@ void	Server::MODE(int fd, std::string param)
             }
             else
             {
-                //ERR_KEYSET
+                this->sendErrMessage(fd, ERR_KEYSET(this->_name, client.getNickname(), list_param.at(0)));
                 return ;
             }
         }
@@ -113,17 +114,17 @@ void	Server::MODE(int fd, std::string param)
                 return ;
             if (this->inListClientServ(list_param.at(2)) == ERROR)
             {
-                //ERR_USERNOTINCHANNEL
+                this->sendErrMessage(fd, ERR_USERNOTINCHANNEL(this->_name, client.getNickname(), list_param.at(2), list_param.at(0)));
                 return ;
             }
             if (this->getChannelWithName(list_param.at(0)).in_list_client(list_param.at(2)) == ERROR) // On verifie que le futur operateur fait partie du channel
             {
-                //ERR_USERNOTINCHANNEL
+                this->sendErrMessage(fd, ERR_USERNOTINCHANNEL(this->_name, client.getNickname(), list_param.at(2), list_param.at(0)));
                 return ;
             }
             if (this->getChannelWithName(list_param.at(0)).in_list_op_client(list_param.at(2)) == OK) // Pas deja present
             {
-                //RPL_UNIQOPIS
+                this->sendRepMessage(fd, RPL_UNIQOPIS(this->_name, client.getNickname(), list_param.at(0), list_param.at(2)));
                 return ;
             }
             else
@@ -179,7 +180,9 @@ void	Server::MODE(int fd, std::string param)
             this->getChannelWithName(list_param.at(0)).setLimitClient(0);
         }
 	}
+    this->sendRepMessage(fd, MODE_INFO(client.getNickname(), client.getUsername(), this->_name, list_param.at(0), list_param.at(1)));
 }
+
 
 // ERR_NEEDMOREPARAMS pour le +k
 // ERR_KEYSET pour le +k, il y a deja un mdp
@@ -196,3 +199,7 @@ void	Server::MODE(int fd, std::string param)
 //	k pour ajouter un mdp au channel
 //	o pour creer un nouvel operateur chan
 //	l pour limiter le nombre de user d un chan
+
+
+
+#define ERR_USERNOTINCHANNEL(server, nickname, nickcible, channel) ":"+ server +" 441 "+ nickname + " " + nickcible + " " + channel + " :They aren't on that channel\r\n";

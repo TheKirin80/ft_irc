@@ -36,6 +36,10 @@ class Server
         void                     sendRepMessage(int fd, std::string to_send);
         void                     sendErrMessage(int fd, std::string to_send);
         int                      ckeckFdExist(int fd);
+        void                     replysExistChannel(int fd, std::string name_channel);
+        void                     replysNewChannel(int fd, std::string name_channel);
+        std::string	             channelModeIs(string name_chan);
+
 
         //COMMAND
         void	PASS(int fd, std::string param);
