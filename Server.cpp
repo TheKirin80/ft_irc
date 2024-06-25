@@ -71,11 +71,9 @@ void	Server::add_channel_serv(int fd, std::string name)
 	Channel new_channel = Channel(name);
 	this->_list_channel_serv.push_back(new_channel);
 	//Ajout du client au liste classique et op ainsi qu'ajout du channel sur le client 
-	Client  client = this->getClientWithFd(fd);
-	Channel channel = this->getChannelWithName(name); // Passe la reference du channel dans le vector channel du serv
-	channel.add_client(client);
-	channel.add_op_client(client);
-	client.add_channel(channel);
+	this->getChannelWithName(name).add_client(this->getClientWithFd(fd));
+	this->getChannelWithName(name).add_op_client(this->getClientWithFd(fd));
+	this->getClientWithFd(fd).add_channel(this->getChannelWithName(name));
 }
 void	Server::rm_channel_serv(std::string channel)
 {
@@ -181,17 +179,11 @@ int	Server::checkChannelName(std::string name)
 {
 	std::string to_send;
 	
-	if ((name[0] != '&' && name[0] != '#' && name[0] != '+' && name[0] != '!') || name.size() > 50 )
-	{
-		//message error
+	if ((name[0] != '#') || name.size() > 50 )
 		return (ERROR);
-	}
 	for (size_t i = 1; name[i]; i++){
 		if (name[i] == ' ' || name[i] == ',' || name[i] == 7)
-		{
-			//message error
 			return (ERROR);
-		}
 	}	
 	return (OK);
 }
@@ -242,4 +234,15 @@ void Server::sendErrMessage(int fd, std::string to_send)
 {
 	if(send(fd, to_send.c_str(), to_send.size(), 0) == -1)
 		std::cerr << RED << "failed to use sendErrMessage  with this fd : "<< fd << RESET << std::endl;
+}
+
+int Server::ckeckFdExist(int fd)
+{
+	std::vector<struct pollfd>::iterator it = this->_list_fd.begin();
+	for(; it != this->_list_fd.end(); it++)
+	{
+		if ((*it).fd == fd)
+			return (OK);
+	}
+	return (ERROR);
 }

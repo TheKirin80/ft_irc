@@ -1,12 +1,12 @@
 #include "libIRC.hpp"
 
-bool signal = false;
+bool run = false;
 
-void Server::signalHandler(int sig)
+static void signalHandler(int sig)
 {
 	(void)sig;
 	std::cout << BLUE << std::endl << "Signal Received!" << RESET << std::endl;
-	signal = true;
+	run = true;
 }
 
 void Server::init_server()
@@ -149,7 +149,6 @@ void Server::receive_new_data(int fd)
 		std::cout << "----" << this->getClientWithFd(fd)._buff << "----" << std::endl;
  		if(this->getClientWithFd(fd)._buff.find("\r\n") == std::string::npos)
 			return;
-		std::cout << "je suis la connard" << std::endl;
 		if (this->getClientWithFd(fd)._buff == "\r\n"){
 			this->getClientWithFd(fd)._buff.clear();
 			return;
@@ -159,7 +158,9 @@ void Server::receive_new_data(int fd)
 		{
 			this->exec_command(fd, command[i]);
 		}
-		this->getClientWithFd(fd)._buff.clear();
+		std::cout << RED << "jai pas encore crash connard\n\n\n\n" << RESET <<std::endl;
+		if (ckeckFdExist(fd) == OK)
+			this->getClientWithFd(fd)._buff.clear();
 	}
 	memset(buff, 0, 1024);
 }
@@ -170,9 +171,11 @@ void Server::loop_server()
 
 	std::cout << BLUE << "Server <" << this->_name << "> Connected" << RESET << std::endl;
 	std::cout << "Waiting to accept a connection...\n";
-	while (signal == false)
+	signal(SIGINT, &signalHandler);
+	signal(SIGQUIT, &signalHandler);
+	while (run == false)
 	{
-		if((poll(&_list_fd.at(0),this->_list_fd.size(),-1) == -1) && signal == false){
+		if((poll(&_list_fd.at(0),this->_list_fd.size(),-1) == -1) && run == false){
 			std::cerr << RED << "Failed to poll()" << RESET << std::endl;
 			return;
 		}
@@ -187,5 +190,7 @@ void Server::loop_server()
 			}
 		}
 	}
+	this->_list_fd.clear();
+	close(this->_serv_fd);
 	//close_fds();
 }

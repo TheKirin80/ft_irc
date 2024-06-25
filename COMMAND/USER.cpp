@@ -22,10 +22,12 @@ void	Server::USER(int fd, std::string param){
 
 	if (client.getPassCheckState() == false)
     {
+		this->sendErrMessage(fd, "PASS not done, need to set it before doing USER\r\n");
 		return ;
 	}
 	if (client.getNickCheckState() == false)
     {
+		this->sendErrMessage(fd, "NICK not done, need to set it before doing USER\r\n");
 		return ;
 	}
 	// if (client.getUserCheckState() == true) // A CHECK LORS DE L EXEC
@@ -35,14 +37,19 @@ void	Server::USER(int fd, std::string param){
 	// }
 	if (param.empty())
     {
+		this->sendErrMessage(fd, ERR_NEEDMOREPARAMS(this->_name, client.getNickname(), "USER"));
 		return ;
 	}
 	args = multi_split(param, " ");
 	if (args.size() < 4)
     {
+		this->sendErrMessage(fd, ERR_NEEDMOREPARAMS(this->_name, client.getNickname(), "USER"));
 		return ;
 	}
-    client.setUsername(args.at(0));
-    client.setRealname(formRealname(args));
-	client.setUserCheckTrue();
+    this->getClientWithFd(fd).setUsername(args.at(0));
+    this->getClientWithFd(fd).setRealname(formRealname(args));
+	this->getClientWithFd(fd).setUserCheckTrue();
+	this->sendRepMessage(fd, RPL_WELCOME(this->_name, client.getNickname()));
+	this->sendRepMessage(fd, RPL_YOURHOST(this->_name, client.getNickname()));
+	this->sendRepMessage(fd, RPL_INFO(this->_name, client.getNickname()));
 }

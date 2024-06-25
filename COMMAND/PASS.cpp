@@ -17,9 +17,6 @@ void	Server::PASS(int fd, std::string param)
 		this->sendErrMessage(fd, ERR_ALREADYREGISTERED(this->_name, client.getNickname()));
 		return ;
 	}
-	// if (client.getNickCheckState() == true){
-	// 	return ;
-	// }
 	if (param != this->_passwrd_serv)
 	{
 		this->sendErrMessage(fd, ERR_PASSWDMISMATCH(this->_name, client.getNickname()));

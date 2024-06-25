@@ -29,8 +29,8 @@ CXX 		= c++
 
 RM 		= rm -f
 
-CXXFLAGS	= -Wall -Wextra -Werror -std=c++98
-# CXXFLAGS	+= -g3 -fsanitize=address,undefined,leak -Weffc++
+CXXFLAGS	= -Wall -Wextra -Werror -std=c++98 -g3
+#CXXFLAGS	+= -g3 -fsanitize=address,undefined,leak -Weffc++
 
 all:		${NAME}
 

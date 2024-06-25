@@ -7,7 +7,7 @@ Client::Client(int fd) : _buff(""), _username(""), _nickname(""), _hostname(""),
 
 Client::~Client(void)
 {
-    this->_list_channel.clear();
+    //this->_list_channel.clear();
     return;
 }
 //_username

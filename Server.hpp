@@ -27,7 +27,6 @@ class Server
         int	                     checkChannelName(std::string name); 
         int	                     inListClientServ(std::string name_client);
         //Initialisation du server et mainloop
-        void                     signalHandler(int sig);
         void                     init_server(void);
         void                     accept_new_client(void);
         void                     exec_command(int fd, std::string param);
@@ -36,6 +35,7 @@ class Server
         void                     rm_fd(int fd);
         void                     sendRepMessage(int fd, std::string to_send);
         void                     sendErrMessage(int fd, std::string to_send);
+        int                      ckeckFdExist(int fd);
 
         //COMMAND
         void	PASS(int fd, std::string param);

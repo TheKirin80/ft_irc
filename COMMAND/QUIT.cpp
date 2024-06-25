@@ -3,7 +3,6 @@
 
 void	Server::QUIT(int fd, std::string param)
 {
-	(void)param; // A enlever pour mettre le param en commentaire
 	std::vector<Client>::iterator itclient = this->_list_client_serv.begin();
 	std::vector<Channel>::iterator itchan = this->_list_channel_serv.begin();
     std::string part_param;
@@ -15,7 +14,10 @@ void	Server::QUIT(int fd, std::string param)
             this->PART(fd, (*itchan).getName());
 		}
 	}
-	//Gestion du message de sortie ou il faut ajouter le parametre param s'il n'est pas vide
+	if (param.empty())
+		this->sendRepMessage(fd, QUIT_INFO(client.getNickname(), client.getUsername(), this->_name, ""));
+	else
+		this->sendRepMessage(fd, QUIT_INFO(client.getNickname(), client.getUsername(), this->_name, " " + param));
 	for (; itclient != this->_list_client_serv.end(); itclient++)
     {
 		if ((*itclient).getFd() == fd){
@@ -23,5 +25,6 @@ void	Server::QUIT(int fd, std::string param)
 			break ;
 		}
 	}
+	rm_fd(fd);
 	close(fd);
 }

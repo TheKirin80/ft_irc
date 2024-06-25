@@ -54,10 +54,12 @@ void	Server::JOIN(int fd, std::string param)
 
 	if (client.getUserCheckState() == false)
     {
+		this->sendErrMessage(fd, "USER not registered yet so command rejected\r\n");
 		return ;
 	}
 	if (param.empty())
     {
+		this->sendErrMessage(fd, ERR_NEEDMOREPARAMS(this->_name, client.getNickname(), "JOIN"));
 		return ;
 	}
 	list_channels = this->multi_split(channels, ",");
@@ -76,7 +78,7 @@ void	Server::JOIN(int fd, std::string param)
     {
 		if (this->checkChannelName(*itchannel) == ERROR)
         {
-            //Message ErrorChannelName 
+            this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, (*itchannel))); 
 			return ;
         }
     }
@@ -90,30 +92,25 @@ void	Server::JOIN(int fd, std::string param)
 				continue ;
 			if (chanel.getOnlyInviteState() == true)
             {
-				//Message erreur invite only
+				this->sendErrMessage(fd, ERR_INVITEONLYCHAN(this->_name, client.getNickname(), (*itchannel)))
 				return ;
 			}
 			if (chanel.getLimitClient() != 0){ // Presence d'une limite de client 
 				if (chanel.count_client() == chanel.getLimitClient())
                 {
-                    //Message channel plein
+                    this->sendErrMessage(fd, ERR_CHANNELISFULL(this->_name, client.getNickname(), (*itchannel)))
 					return ;
 				}
 			}
 			if (!chanel.getPasswrd().empty()){ //Presence d'un mot de passe
-				if (keys.empty())
+				if (keys.empty() || (chanel.getPasswrd() != (*itkeys)))
                 {
-					//Message Badchannelkey
+					this->sendErrMessage(fd, ERR_BADCHANNELKEY(this->_name, client.getNickname(), (*itchannel)))
 					return ;
 				}
-				if (chanel.getPasswrd() != (*itkeys))
-                {
-                    //Message Badchannelkey					
-                    return ;
-				}
 			}
-			client.add_channel(chanel);
-			chanel.add_client(client);
+			this->getClientWithFd(fd).add_channel(this->getChannelWithName(*itchannel));
+			this->getChannelWithName(*itchannel).add_client(this->getClientWithFd(fd));
             //message d'ajout dans un channel existant
 		}
 		else //Creation d'un nouveau channel
