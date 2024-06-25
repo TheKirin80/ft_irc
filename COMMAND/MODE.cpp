@@ -1,42 +1,11 @@
 #include "../libIRC.hpp"
 
-// static int	check_kol(std::string params){
-// 	int	how_many = 0;
-	
-// 	for (size_t i = 1; i < params.size(); i++)
-// 		if (params[i] == 'o' || params[i] == 'k' || params[i] == 'l')
-// 			how_many++;
-// 	if (how_many >= 2)
-// 		return EXIT_FAILURE;
-// 	return (EXIT_SUCCESS);
-// }
-
-// static std::string get_param_mods(std::string params){
-// 	std::string mods;
-// 	size_t i = 0;
-// 	for (; i < params.size(); i++){
-// 		if (params[i] == ' ')
-// 			break ;
-// 	}
-// 	i++;
-// 	if (params[i]){
-// 		for (size_t j = i; j < params.size(); j++)
-// 			mods += params[j];
-// 	}
-// 	return mods;
-// }
-
 static int  checkFlag(std::vector<std::string> &list_param)
 {
-    std::cout << RED << "1 "<< list_param.at(1) << std::endl;
     if (list_param.at(1).size() != 2)
         return (ERROR);
-    std::cout << RED << "2 "<< list_param.at(1) << std::endl;
     if (list_param.at(1).at(0) != '+' && list_param.at(1).at(0) != '-')
         return (ERROR);
-    std::cout << RED << "3 "<< list_param.at(1) << std::endl;
-    // if (list_param.at(1).find_first_not_of("itkol", 1))
-    //     return (ERROR);
     if (list_param.at(1).at(1) != 'i' && list_param.at(1).at(1) != 't' && list_param.at(1).at(1) != 'k' && list_param.at(1).at(1) != 'o' && list_param.at(1).at(1) != 'l')
         return (ERROR);
     std::cout << RED << "4 "<< list_param.at(1) << std::endl;
@@ -49,7 +18,6 @@ static int  isStringDigit(std::string str){
     }
     return (OK);
 }
-
 
 void	Server::MODE(int fd, std::string param) 
 {
@@ -75,6 +43,11 @@ void	Server::MODE(int fd, std::string param)
         this->sendErrMessage(fd, ERR_NOSUCHCHANNEL(this->_name, client.getNickname(), list_param.at(0)));
 		return ;
 	}
+	if (this->getChannelWithName(list_param.at(0)).in_list_op_client(client.getNickname()) == ERROR)
+    {
+        this->sendErrMessage(fd, ERR_CHANOPRIVSNEEDED(this->_name, client.getNickname(), list_param.at(0)));
+		return ;
+	}
 	if (list_param.size() == 1)
     {
         this->sendRepMessage(fd, RPL_CHANNELMODIS(this->_name, client.getNickname(), list_param.at(0), this->channelModeIs(list_param.at(0))));
@@ -85,14 +58,7 @@ void	Server::MODE(int fd, std::string param)
         this->sendErrMessage(fd, ERR_UNKNOWNMODE(this->_name, client.getNickname(), list_param.at(1), list_param.at(0)));
         return;
     }
-	if (this->getChannelWithName(list_param.at(0)).in_list_op_client(client.getNickname()) == ERROR)
-    {
-        this->sendErrMessage(fd, ERR_CHANOPRIVSNEEDED(this->_name, client.getNickname(), list_param.at(0)));
-		return ;
-	}
     std::vector<std::string>::iterator it = list_param.begin() + 1;
-    std::cout << RED << "jeisbdkjasdb" << RESET << std::endl;
-    std::cout << RED << *it << RESET << std::endl;
 	if ((*it).at(0) == '+')
     {
         if ((*it).at(1) == 'i')
