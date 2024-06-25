@@ -38,6 +38,7 @@ class Channel
         std::string	getNicknameOfListClient(void);
         void        sendRepMessageChannel(int fd, std::string to_send);
         void        replyToAll(std::string reply);
+        void        replyToAllTopic(std::string origin, std::string serv_name, std::string topic);
 
     private :
         std::string         _name;

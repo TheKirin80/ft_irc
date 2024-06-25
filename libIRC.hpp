@@ -47,13 +47,13 @@
 # define ERR_ERRONEUSNICKNAME(server, client, nickname) (":" + server + " 432 " + client + " " + nickname + " :Erroneus nickname\r\n")
 # define ERR_NICKNAMEINUSE(server, client, nickname) (":" + server + " 433" + client + " " + nickname + " :Nickname is already in use\r\n")
 # define ERR_BADCHANNELKEY(server, client, channel) (":" + server + " 475 " + client + " " + channel + " :Cannot join channel (+k)\r\n")
-# define ERR_KEYSET(server, client, channel)	(":" + server + " 467 " + client + " " + channel + " :Channel key already set\r\n"
+# define ERR_KEYSET(server, client, channel)	(":" + server + " 467 " + client + " " + channel + " :Channel key already set\r\n")
 # define ERR_USERNOTINCHANNEL(server, nickname, nickcible, channel) (":"+ server +" 441 "+ nickname + " " + nickcible + " " + channel + " :They aren't on that channel\r\n")
 //!TODO Macro RPL
 # define RPL_UMODEIS(server, user, modes) (":" + server + " 221 "+ user + " :+" + modes + "\r\n")
 # define RPL_CHANNELMODIS(server, user, channel, modes, modsarg) (":" + server + " 324 " + user + " " + channel + " " + modes + " " + modsarg + "\r\n")
 # define RPL_NOTOPIC(server, user, channel) (":" + server + " 331 " + user + " " + channel + " :No topic is set\r\n")
-# define RPL_TOPIC(serv, nick, chan, topic) (":" + serv + " 332 " + nick + " " + chan + " :" + topic + "\r\n")
+# define RPL_TOPIC(server, nickname, channel, topic) (":" + server + " 332 " + nickname + " " + channel + " " + topic + "\r\n")
 # define RPL_TOPICWHOTIME(serv, user, channel, nick, setat) (":" + serv +  + " 333 " + user + " " + channel + " " + nick + " " + setat + "\r\n")
 # define RPL_ENDOFNAMES(server, user, chan)  (":" + server + " 366 " + user + " " + chan + " :End of /NAMES list." + "\r\n")
 # define RPL_QUIT(userID, reason) (userID + " QUIT :Quit: " + reason + "\r\n")
@@ -68,9 +68,11 @@
 # define RPL_YOURHOST(server,nickname) (":" + server + " 002 " + nickname + " :Your host is " + server + " (localhost)\r\n")
 # define RPL_INFO(server,nickname) (":" + server + " 003 " + nickname + " :This server was created by akefeder et arnduran.\r\n")
 # define RPL_UNIQOPIS(server, client, channel, nickcible)	":" + server " 325 " + client + " " + channel + " " + nickcible + "\r\n"
+# define RPL_INVITING(server, client, nickname_cible, channel) (":" + server + " 341 " + client + " " + nickname_cible + " " + channel + "\r\n")
 //!TODO Macro info command
 # define QUIT_INFO(nickname, username, server, param) (":" + nickname + "!~" + username + "@" + server + " QUIT" + param + "\r\n")
 # define JOIN_INFO(nickname, username, server, channel) (":"+ nickname + "!~" + username + "@" + server +" JOIN :" + channel + "\r\n")
 # define MODE_INFO(client, username, server, channel, mod) (":" + client + "!~" + username + "@" + server + " " + "MODE "+ channel + " " + mod + "\r\n")
+# define TOPIC_ALERT(client, username_cible, server, channel, topic) (":" + client + "!~" + username_cible + "@" + serv_name + " TOPIC " + channel + " :" + topic + "\r\n")
 
 #endif

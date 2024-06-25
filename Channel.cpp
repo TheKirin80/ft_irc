@@ -191,3 +191,11 @@ void Channel::replyToAll(std::string reply)
         sendRepMessageChannel((*it).getFd(), reply);
     }
 }
+void Channel::replyToAllTopic(std::string origin, std::string serv_name, std::string topic)
+{
+    std::vector<Client>::iterator it = _list_client.begin();
+    for (;it != this->_list_client.end(); it++)
+    {
+        this->sendRepMessageChannel((*it).getFd(), TOPIC_ALERT(origin, (*it).getUsername(), serv_name, this->_name, topic));
+    }
+}

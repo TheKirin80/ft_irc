@@ -251,7 +251,6 @@ void Server::replysExistChannel(int fd, std::string name_channel)
 {
 	Channel channel = this->getChannelWithName(name_channel);
 	Client client = this->getClientWithFd(fd);
-	std::cout << "in replyEXISTCHANNEL" << std::endl;
 	channel.replyToAll(JOIN_INFO(client.getNickname(), client.getUsername(), this->_name, name_channel));
 	this->sendRepMessage(fd, RPL_NAMREPLY(this->_name, client.getNickname(), name_channel, channel.getNicknameOfListClient()));
 	this->sendRepMessage(fd, RPL_ENDOFNAMES(this->_name, client.getNickname(), name_channel));

@@ -4,37 +4,39 @@ void	Server::INVITE(int fd, std::string param){
 	std::vector<std::string>	args;
     Client client = this->getClientWithFd(fd);
 
-	if (client.getUserCheckState()== false)
+	iif (client.getUserCheckState() == false)
     {
-        //Message erreur user state
-		return;
+		this->sendErrMessage(fd, "USER not registered yet so command rejected\r\n");
+		return ;
 	}
 	if (param.empty())
     {
+        this->sendErrMessage(fd, ERR_NEEDMOREPARAMS(this->_name, client.getNickname(), "INVITE"));
 		return ;
 	}
 	args = multi_split(param, " ");
 	if (args.size() < 2)
     {
-		//Error nombre param
+		this->sendErrMessage(fd, ERR_NEEDMOREPARAMS(this->_name, client.getNickname(), "INVITE"));
 		return ;
 	}
 	if (this->inListClientServ(args.at(0)) == ERROR)
     {
-		//Message client inexistant
+		this->sendErrMessage(fd, ERR_NOSUCHNICK(this->_name, args.at(0)));
         return ;
 	}
-	if (client.in_channel(args.at(1)) == ERROR){
-        //Message pas ton channel
+	if (client.in_channel(args.at(1)) == ERROR)
+	{
+        this->sendErrMessage(fd, ERR_NOTONCHANNEL(this->_name, client.getNickname(), args.at(1)));
 		return ;
 	}
 	if (this->getChannelWithName(args.at(1)).in_list_client(args.at(0)) == OK)
     {
-        //Message deja dans le channel
+        this->sendErrMessage(fd, ERR_USERONCHANNEL(this->_name, client.getNickname(), args.at(0), args.at(1)));
 		return ;
 	}
-	//Message d'acceptation de l'INVITE
+	this->sendRepMessage(fd, RPL_INVITING(this->_name, client.getNickname(), args.at(0), args.at(1)))
 	this->getClientWithName(args.at(0)).add_channel(this->getChannelWithName(args.at(1)));
 	this->getChannelWithName(args.at(1)).add_client(this->getClientWithName(args.at(0)));
-	//voir pour un potentiel message !
+	this->replysExistChannel(this->getClientWithName(args.at(0)).getFd(), args.at(1));
 }
