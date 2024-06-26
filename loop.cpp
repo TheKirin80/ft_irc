@@ -148,7 +148,7 @@ void Server::receive_new_data(int fd)
 	else
 	{
 		this->getClientWithFd(fd)._buff += buff;
-		//std::cout << "----" << this->getClientWithFd(fd)._buff << "----" << std::endl;
+		std::cout << "----" << this->getClientWithFd(fd)._buff << "----" << std::endl;
  		if(this->getClientWithFd(fd)._buff.find("\r\n") == std::string::npos)
 			return;
 		if (this->getClientWithFd(fd)._buff == "\r\n"){

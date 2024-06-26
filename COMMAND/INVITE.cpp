@@ -35,6 +35,11 @@ void	Server::INVITE(int fd, std::string param){
         this->sendErrMessage(fd, ERR_USERONCHANNEL(this->_name, client.getNickname(), args.at(0), args.at(1)));
 		return ;
 	}
+	if ((this->getChannelWithName(args.at(1)).getOnlyInviteState() == true) && (this->getChannelWithName(args.at(1)).in_list_op_client(client.getNickname()) == ERROR)) // client qui kick operateur ? 
+	{
+		this->sendErrMessage(fd, ERR_CHANOPRIVSNEEDED(this->_name, client.getNickname(), args.at(1)));
+		return ;
+	}
 	this->sendRepMessage(fd, RPL_INVITING(this->_name, client.getNickname(), args.at(0), args.at(1)));
 	this->sendRepMessage(this->getClientWithName(args.at(0)).getFd(), INVITE_INFO(client.getNickname(), client.getUsername(), this->_name, args.at(0), args.at(1)));
 	//this->getClientWithName(args.at(0)).add_channel(this->getChannelWithName(args.at(1)));
