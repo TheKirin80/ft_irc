@@ -148,7 +148,7 @@ void Server::receive_new_data(int fd)
 	else
 	{
 		this->getClientWithFd(fd)._buff += buff;
-		std::cout << "----" << this->getClientWithFd(fd)._buff << "----" << std::endl;
+		//std::cout << "----" << this->getClientWithFd(fd)._buff << "----" << std::endl;
  		if(this->getClientWithFd(fd)._buff.find("\r\n") == std::string::npos)
 			return;
 		if (this->getClientWithFd(fd)._buff == "\r\n"){
@@ -160,7 +160,6 @@ void Server::receive_new_data(int fd)
 		{
 			this->exec_command(fd, command[i]);
 		}
-		// std::cout << RED << "jai pas encore crash connard\n\n\n\n" << RESET <<std::endl;
 		if (ckeckFdExist(fd) == OK)
 			this->getClientWithFd(fd)._buff.clear();
 	}
@@ -171,8 +170,8 @@ void Server::loop_server()
 {
 	this->init_server();
 
-	std::cout << BLUE << "Server <" << this->_name << "> Connected" << RESET << std::endl;
-	std::cout << "Waiting to accept a connection...\n";
+	std::cout << BLUE << "Server <" << this->_name << "> Up" << RESET << std::endl;
+	std::cout << "Waiting connection...\n";
 	signal(SIGINT, &signalHandler);
 	signal(SIGQUIT, &signalHandler);
 	while (run == false)
@@ -192,7 +191,6 @@ void Server::loop_server()
 			}
 		}
 	}
-	this->_list_fd.clear();
-	close(this->_serv_fd);
+	close_fds();
 	//close_fds();
 }

@@ -7,9 +7,7 @@ void	Server::QUIT(int fd, std::string param)
 	std::vector<Channel>::iterator itchan = this->_list_channel_serv.begin();
 	std::vector<Channel>::iterator itchane = this->_list_channel_serv.end();
     std::string part_param;
-	std::cout << RED << "\n\n\n CHANNELB : " << RESET << std::endl;
 	for (; itchan != itchane; itchan++){
-		std::cout << RED << "\n\n\n CHANNEL : " << RESET << std::endl;
 		if ((*itchan).in_list_client(this->getClientWithFd(fd).getNickname()) == OK) // On verifie si le client est dans chacun des channels ce qui correspond a PART le channel
         {
             this->PART(fd, (*itchan).getName());
@@ -27,5 +25,4 @@ void	Server::QUIT(int fd, std::string param)
 		}
 	}
 	rm_fd(fd);
-	close(fd);
 }

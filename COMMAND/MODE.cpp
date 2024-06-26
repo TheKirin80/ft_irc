@@ -8,7 +8,6 @@ static int  checkFlag(std::vector<std::string> &list_param)
         return (ERROR);
     if (list_param.at(1).at(1) != 'i' && list_param.at(1).at(1) != 't' && list_param.at(1).at(1) != 'k' && list_param.at(1).at(1) != 'o' && list_param.at(1).at(1) != 'l')
         return (ERROR);
-    std::cout << RED << "4 "<< list_param.at(1) << std::endl;
     return (OK);
 }
 static int  isStringDigit(std::string str){
@@ -161,9 +160,9 @@ void	Server::MODE(int fd, std::string param)
             this->getChannelWithName(list_param.at(0)).setLimitClient(0);
         }
 	}
-    if (list_param.size() == 3)
-        this->sendRepMessage(fd, MODE_INFO(client.getNickname(), client.getUsername(), this->_name, list_param.at(0), " " + list_param.at(2)));
-    else
-        this->sendRepMessage(fd, MODE_INFO(client.getNickname(), client.getUsername(), this->_name, list_param.at(0), ""));
+    // if (list_param.size() == 3)
+    this->sendRepMessage(fd, MODE_INFO(client.getNickname(), client.getUsername(), this->_name, list_param.at(0), " " + list_param.at(1)));
+//     else
+//         this->sendRepMessage(fd, MODE_INFO(client.getNickname(), client.getUsername(), this->_name, list_param.at(0), ""));
 }
 

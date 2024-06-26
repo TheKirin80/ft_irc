@@ -39,6 +39,7 @@ class Server
         void                     replysExistChannel(int fd, std::string name_channel);
         void                     replysNewChannel(int fd, std::string name_channel);
         std::string	             channelModeIs(std::string name_chan);
+        void	                 close_fds(void);
 
 
         //COMMAND

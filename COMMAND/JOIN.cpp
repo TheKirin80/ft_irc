@@ -113,12 +113,10 @@ void	Server::JOIN(int fd, std::string param)
 			}
 			this->getClientWithFd(fd).add_channel(this->getChannelWithName(*itchannel));
 			this->getChannelWithName(*itchannel).add_client(this->getClientWithFd(fd));
-            std::cout << "in JOIN EXIST" << std::endl;
 			this->replysExistChannel(fd,(*itchannel));
 		}
 		else //Creation d'un nouveau channel
         {
-			std::cout << "je uisla";
 			add_channel_serv(fd, *itchannel);
 			this->replysNewChannel(fd, *itchannel);
 		}

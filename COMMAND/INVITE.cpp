@@ -35,8 +35,8 @@ void	Server::INVITE(int fd, std::string param){
         this->sendErrMessage(fd, ERR_USERONCHANNEL(this->_name, client.getNickname(), args.at(0), args.at(1)));
 		return ;
 	}
-	this->sendRepMessage(fd, INVITE_INFO(client.getNickname(), client.getUsername(), this->_name, args.at(0), args.at(1)));
 	this->sendRepMessage(fd, RPL_INVITING(this->_name, client.getNickname(), args.at(0), args.at(1)));
+	this->sendRepMessage(this->getClientWithName(args.at(0)).getFd(), INVITE_INFO(client.getNickname(), client.getUsername(), this->_name, args.at(0), args.at(1)));
 	this->getClientWithName(args.at(0)).add_channel(this->getChannelWithName(args.at(1)));
 	this->getChannelWithName(args.at(1)).add_client(this->getClientWithName(args.at(0)));
 	this->replysExistChannel(this->getClientWithName(args.at(0)).getFd(), args.at(1));

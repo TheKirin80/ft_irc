@@ -8,6 +8,7 @@ Server::~Server(void)
 {
     this->_list_channel_serv.clear();
     this->_list_client_serv.clear();
+	this->_list_fd.clear();
     return;
 }
 //_name
@@ -208,23 +209,14 @@ void Server::rm_fd(int fd)
 	{
 		if ((*it).fd == fd)
 		{
+			(*it).events = 0;
+			(*it).revents = 0;
 			this->_list_fd.erase(it);
+			close(fd);
 			return;
 		}
 	}
 }
-
-// void	Server::close_fd()
-// {
-// 	for(size_t i = 0; i < clients.size(); i++){
-// 		std::cout << RED << "Client <" << clients[i].GetFd() << "> Disconnected" << WHI << std::endl;
-// 		close(clients[i].GetFd());
-// 	}
-// 	if (server_fdsocket != -1){	
-// 		std::cout << RED << "Server <" << server_fdsocket << "> Disconnected" << WHI << std::endl;
-// 		close(server_fdsocket);
-// 	}
-// }
 
 void Server::sendRepMessage(int fd, std::string to_send)
 {
@@ -296,4 +288,17 @@ std::string	Server::channelModeIs(std::string name_chan)
 		mod += int_to_str(channel.getLimitClient());
 	}
 	return (mod);
+}
+void	Server::close_fds(void)
+{
+	for(size_t i = 0; i < this->_list_client_serv.size(); i++)
+	{
+		std::cout << RED << "Client <" << _list_client_serv[i].getFd() << "> Disconnected" << RESET << std::endl;
+		close(_list_client_serv[i].getFd());
+	}
+	if (this->_serv_fd != -1)
+	{	
+		std::cout << RED << "Server <" << this->_serv_fd << "> Disconnected" << RESET << std::endl;
+		close(this->_serv_fd);
+	}
 }
