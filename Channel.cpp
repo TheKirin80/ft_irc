@@ -1,6 +1,6 @@
 #include "libIRC.hpp"
 
-Channel::Channel(std::string name) : _name(name), _passwrd(""), _topic(""), _limit_client(0), _restricted_topic(false), _only_invite(false), _list_client(), _list_op_client()
+Channel::Channel(std::string name) : _name(name), _passwrd(""), _topic(""), _limit_client(0), _restricted_topic(false), _only_invite(false), _list_client(), _list_op_client(), _list_invite_client()
 {
     return;
 }
@@ -9,6 +9,7 @@ Channel::~Channel(void)
 {
     this->_list_client.clear();
     this->_list_op_client.clear();
+    this->_list_invite_client.clear();
     return;
 }
 // _name
@@ -105,6 +106,16 @@ int Channel::in_list_op_client(std::string client)
     return (ERROR);
 }
 
+int Channel::in_list_invite_client(std::string client)
+{
+    std::vector<Client>::iterator it = this->_list_invite_client.begin();
+    std::vector<Client>::iterator ite = this->_list_invite_client.end();
+    for(; it != ite;it++)
+        if ((*it).getNickname() == client)
+            return (OK);
+    return (ERROR);
+}
+
 void	Channel::add_client(Client &client)
 {
 	this->_list_client.push_back(client);
@@ -114,6 +125,11 @@ void	Channel::add_op_client(Client &client)
 {
 	this->_list_op_client.push_back(client);
 }
+
+void	Channel::add_invite_client(Client &client)
+{
+	this->_list_invite_client.push_back(client);
+}
 void	Channel::rm_perm(Client &client)
 {
 	std::vector<Client>::iterator it = this->_list_op_client.begin();
@@ -121,6 +137,17 @@ void	Channel::rm_perm(Client &client)
 		if ((*it).getNickname() == client.getNickname())
         {
 			this->_list_op_client.erase(it);
+            return;
+        }
+	}
+}
+void	Channel::rm_invite(Client &client)
+{
+	std::vector<Client>::iterator it = this->_list_invite_client.begin();
+	for (; it != this->_list_invite_client.end(); it++){
+		if ((*it).getNickname() == client.getNickname())
+        {
+			this->_list_invite_client.erase(it);
             return;
         }
 	}
@@ -134,6 +161,7 @@ void    Channel::rm_client(Client &client)
 		if ((*it).getNickname() == client.getNickname())
         {
             rm_perm(client);
+            rm_invite(client);
 			this->_list_client.erase(it);
             return;
         }

@@ -94,8 +94,11 @@ void	Server::JOIN(int fd, std::string param)
 				continue ;
 			if (chanel.getOnlyInviteState() == true)
             {
-				this->sendErrMessage(fd, ERR_INVITEONLYCHAN(this->_name, client.getNickname(), (*itchannel)));
-				return ;
+				if (chanel.in_list_invite_client(client.getNickname()) == ERROR)
+				{
+					this->sendErrMessage(fd, ERR_INVITEONLYCHAN(this->_name, client.getNickname(), (*itchannel)));
+					return ;
+				}
 			}
 			if (chanel.getLimitClient() != 0){ // Presence d'une limite de client 
 				if (chanel.count_client() == chanel.getLimitClient())

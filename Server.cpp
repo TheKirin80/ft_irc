@@ -212,6 +212,7 @@ void Server::rm_fd(int fd)
 			(*it).events = 0;
 			(*it).revents = 0;
 			this->_list_fd.erase(it);
+			std::cout << RED << "Client <" << fd << "> Disconnected" << RESET << std::endl;
 			close(fd);
 			return;
 		}

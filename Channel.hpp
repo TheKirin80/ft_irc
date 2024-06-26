@@ -28,9 +28,12 @@ class Channel
         //utilitaire
         int         in_list_client(std::string client);
         int         in_list_op_client(std::string client);
+        int         in_list_invite_client(std::string client);
         void	    add_client(Client &client);
         void	    add_op_client(Client &client);
+        void	    add_invite_client(Client &client);
         void	    rm_perm(Client &client);
+        void	    rm_invite(Client &client);
         void        rm_client(Client &client);
         int	        isChannelEmpty(void);
         void        rm_passwrd(void);
@@ -50,6 +53,7 @@ class Channel
         bool                _only_invite;
         std::vector<Client> _list_client;
         std::vector<Client> _list_op_client;
+        std::vector<Client> _list_invite_client;
 
 };
 
